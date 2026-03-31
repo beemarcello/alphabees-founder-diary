@@ -271,7 +271,6 @@
             const indexRef = React.useRef(0);
 
             React.useEffect(() => {
-                // Start after heroFadeIn animation completes (1.2s + 200ms delay + buffer)
                 const startDelay = setTimeout(() => {
                     const type = () => {
                         if (indexRef.current >= text.length) {
@@ -281,23 +280,23 @@
                         const i = indexRef.current;
                         const prevChar = i > 0 ? text[i - 1] : '';
 
-                        // Base: 65–115ms per character
-                        let delay = 65 + Math.random() * 50;
+                        // Base: 30–55ms per character
+                        let delay = 30 + Math.random() * 25;
 
                         // Pause after spaces (between words)
-                        if (prevChar === ' ') delay += 20 + Math.random() * 55;
+                        if (prevChar === ' ') delay += 10 + Math.random() * 20;
 
                         // Longer pause after period
-                        if (prevChar === '.') delay += 280 + Math.random() * 220;
+                        if (prevChar === '.') delay += 120 + Math.random() * 80;
 
                         // Comma pause
-                        if (prevChar === ',') delay += 90 + Math.random() * 80;
+                        if (prevChar === ',') delay += 40 + Math.random() * 30;
 
-                        // Burst of fast typing (20% chance — simulates confident stretches)
-                        if (Math.random() < 0.20) delay = 28 + Math.random() * 22;
+                        // Burst of fast typing (20% chance)
+                        if (Math.random() < 0.20) delay = 15 + Math.random() * 10;
 
                         // Rare hesitation (4% chance)
-                        if (Math.random() < 0.04) delay += 380 + Math.random() * 280;
+                        if (Math.random() < 0.04) delay += 150 + Math.random() * 100;
 
                         setTimeout(() => {
                             indexRef.current += 1;
@@ -306,7 +305,7 @@
                         }, delay);
                     };
                     type();
-                }, 1500);
+                }, 400);
 
                 return () => clearTimeout(startDelay);
             }, []);
