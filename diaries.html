@@ -808,7 +808,7 @@
         #plant-left-back  { display: none; }
         #plant-right-back { display: none; }
         #plant-left-front  { left: 0;  transform: translateX(-15%); }
-        #plant-right-front { right: 0; transform: translateX(15%) scaleX(-1); }
+        #plant-right-front { right: 0; transform: translateX(15%); }
 
         #hero-intro-text {
             position: relative;
@@ -1044,7 +1044,7 @@
 
                 const xL = START + p1 * (REST - START);
                 plantLF.style.transform = `translateX(${xL}%)`;
-                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
+                plantRF.style.transform = `translateX(${-xL}%)`;
 
                 const scale = 0.78 + p1 * 0.22;
                 heroText.style.opacity   = p1 * (1 - p2);
