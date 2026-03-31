@@ -769,153 +769,6 @@
             }
         }
 
-        /* ── Hero Scene ── */
-        #hero-wrapper {
-            height: 285vh; /* sticky ends at 185vh: hold at 100% until 1.5vh, fade-out ends at 1.85vh */
-        }
-        #hero-scene {
-            position: sticky;
-            top: 0;
-            z-index: 10; /* below nav (z-index:50) so nav stays on top */
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: visible;
-        }
-
-        #hero-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url('assets/diary-previews/StockCake-Pixel_Paradise_Sunset-2039111-medium.jpg');
-            background-size: cover;
-            background-position: center bottom;
-            z-index: 1;
-            opacity: 0;
-        }
-
-        #hero-bg-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* Plant layers — fixed to viewport, stay at edges while content scrolls */
-        .plant-layer {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 55%;
-            will-change: transform;
-            z-index: 100;
-            pointer-events: none;
-        }
-        .plant-layer img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-            mix-blend-mode: screen;
-            /* Shift green → cyan/teal, darken for evening mood.
-               Filter only affects existing image pixels — black stays black
-               and stays invisible with mix-blend-mode: screen. No seam artifacts. */
-            filter: hue-rotate(58deg) saturate(0.50) brightness(0.68) contrast(1.10);
-        }
-
-        /* Back layer: hidden for now */
-        #plant-left-back  { display: none; }
-        #plant-right-back { display: none; }
-
-        /* Front layer: starts prominently visible, JS slides them out on scroll */
-        #plant-left-front  { left: 0; transform: translateX(-15%); }
-        #plant-right-front { right: 0; transform: translateX(15%) scaleX(-1); }
-
-        /* Right image flipped to face inward */
-        #plant-right-front img { transform: scaleX(-1); }
-
-        #hero-intro-text {
-            position: relative;
-            z-index: 6;
-            text-align: center;
-            padding: 0 48px;
-            max-width: 700px;
-            pointer-events: none;
-            opacity: 0;
-        }
-        #hero-intro-text .eyebrow {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
-            color: rgba(255,255,255,0.40);
-            margin-bottom: 18px;
-        }
-        #hero-intro-text h1 {
-            font-family: 'Bigola Display', serif;
-            font-size: clamp(2.4rem, 5vw, 3.8rem);
-            letter-spacing: 0em;
-            color: rgba(255,255,255,0.92);
-            line-height: 1.08;
-            margin-bottom: 20px;
-        }
-        #hero-intro-text p {
-            font-size: 15px;
-            color: rgba(255,255,255,0.72);
-            line-height: 1.9;
-        }
-
-        /* Scroll hint */
-        #scroll-hint {
-            position: absolute;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 7;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.5;
-        }
-        #scroll-hint span {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
-            color: rgba(255,255,255,0.5);
-        }
-        #scroll-hint .hint-line {
-            width: 1px;
-            height: 40px;
-            background: rgba(255,255,255,0.3);
-            animation: scrollHintPulse 2s ease-in-out infinite;
-        }
-        @keyframes scrollHintPulse {
-            0%, 100% { opacity: 0.3; transform: scaleY(1); }
-            50%       { opacity: 1;   transform: scaleY(0.5); transform-origin: top; }
-        }
-
-        /* Card pop-in */
-        .post-card {
-            opacity: 0;
-            transform: translateY(32px);
-        }
-        .post-card.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @media (max-width: 900px) {
-            #hero-intro-text { padding: 0 24px; }
-            #plant-left-back  { width: 65%; }
-            #plant-right-back { width: 65%; }
-            #plant-left-front  { width: 72%; }
-            #plant-right-front { width: 72%; }
-        }
     </style>
 </head>
 <body>
@@ -954,42 +807,6 @@
         </nav>
 
         <!-- Hero Scene -->
-        <div id="hero-wrapper">
-        <div id="hero-scene">
-            <div id="hero-bg"></div>
-            <div id="hero-bg-overlay"></div>
-
-            <!-- Back layer (slides out slower, smaller) -->
-            <div class="plant-layer" id="plant-left-back">
-                <img src="assets/palm_scroll_animation/plant_left.webp" alt="">
-            </div>
-            <div class="plant-layer" id="plant-right-back">
-                <img src="assets/palm_scroll_animation/plant_right.webp" alt="">
-            </div>
-
-            <!-- Front layer (slides out first, larger) -->
-            <div class="plant-layer" id="plant-left-front">
-                <img src="assets/palm_scroll_animation/plant_left_front.webp" alt="">
-            </div>
-            <div class="plant-layer" id="plant-right-front">
-                <img src="assets/palm_scroll_animation/plant_right_front.webp" alt="">
-            </div>
-
-            <!-- Intro text (revealed as plants open) -->
-            <div id="hero-intro-text">
-                <p class="eyebrow">Founder Diaries</p>
-                <h1>No hidden costs.<br>It's free!</h1>
-                <p>We build software. No courses. No paywalls. This diary is how we share what we learn along the way.</p>
-            </div>
-
-            <!-- Scroll hint -->
-            <div id="scroll-hint">
-                <div class="hint-line"></div>
-                <span>scroll</span>
-            </div>
-        </div>
-        </div><!-- /hero-wrapper -->
-
         <!-- Filter bar -->
         <div class="filter-bar" id="filter-bar">
             <button class="filter-btn" onclick="filterPosts('featured', this)">Featured</button>
@@ -1076,69 +893,6 @@
     </div>
 
     <script>
-        // ── Plant scroll animation ─────────────────────────────────────────
-        (function() {
-            const plantLF  = document.getElementById('plant-left-front');
-            const plantRF  = document.getElementById('plant-right-front');
-            const heroBg   = document.getElementById('hero-bg');
-            const heroText = document.getElementById('hero-intro-text');
-            const hint     = document.getElementById('scroll-hint');
-
-            function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
-            function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-
-            const START = -15;
-            const REST  = -72;
-
-            function onScroll() {
-                const s  = window.scrollY;
-                const vh = window.innerHeight;
-
-                // Phase 1 (0 → vh): palms slide out + H1 fades in + scales up
-                const p1 = easeOut(clamp(s / vh, 0, 1));
-                // Phase 2 (1.5vh → 1.85vh): H1 fades out — holds at 100% until 1.5vh
-                const p2 = easeOut(clamp((s - vh * 1.5) / (vh * 0.35), 0, 1));
-
-                // Plants slide out in phase 1, hold in phase 2
-                const xL = START + p1 * (REST - START);
-                plantLF.style.transform = `translateX(${xL}%)`;
-                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
-
-                heroBg.style.opacity = (1 - p1) * 0.75;
-
-                // H1: fade in + grow during phase 1, fade out during phase 2
-                const scale = 0.78 + p1 * 0.22; // 0.78 → 1.0
-                heroText.style.opacity   = p1 * (1 - p2);
-                heroText.style.transform = `scale(${scale})`;
-
-                hint.style.opacity = clamp(0.5 - s / 80, 0, 0.5);
-            }
-
-            window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
-
-        })();
-
-
-        // ── Blog card pop-in via IntersectionObserver ──────────────────────
-        function observeCards(cards) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const siblings = [...entry.target.parentElement.querySelectorAll('.post-card')];
-                        const idx = siblings.indexOf(entry.target) % 3;
-                        entry.target.style.transitionDelay = `${idx * 90}ms`;
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.12 });
-            cards.forEach(card => observer.observe(card));
-        }
-
-        // Observe hardcoded cards (welcome card) immediately
-        observeCards(document.querySelectorAll('.post-card'));
-
         // ── Load diary cards from index.json ───────────────────────────────
         (async function loadDiaries() {
             try {
@@ -1146,7 +900,6 @@
                 if (!res.ok) return;
                 const data = await res.json();
                 const grid = document.getElementById('blog-grid');
-                const newCards = [];
 
                 data.diaries.forEach(d => {
                     const card = document.createElement('a');
@@ -1177,10 +930,7 @@
                             '</div>' +
                         '</div>';
                     grid.appendChild(card);
-                    newCards.push(card);
                 });
-
-                observeCards(newCards);
             } catch(e) {
                 console.warn('Could not load diaries index:', e);
             }
