@@ -832,7 +832,7 @@
 
         /* Front layer: starts prominently visible, JS slides them out on scroll */
         #plant-left-front  { left: 0;  transform: translateX(-15%); }
-        #plant-right-front { right: 0; transform: translateX(15%) scaleX(-1); }
+        #plant-right-front { right: 0; transform: translateX(15%); }
 
         #hero-intro-text {
             position: relative;
@@ -916,7 +916,7 @@
 
         /* ── Plant image positioning ── */
         #plant-left-front  img { object-position: right center; }
-        #plant-right-front img { object-position: right center; }
+        #plant-right-front img { object-position: left center; }
 
         /* ── Mobile hamburger button ── */
         #mobile-menu-btn {
@@ -1377,7 +1377,7 @@
                 // Plants slide out in phase 1, hold in phase 2
                 const xL = START + p1 * (REST - START);
                 plantLF.style.transform = `translateX(${xL}%)`;
-                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
+                plantRF.style.transform = `translateX(${-xL}%)`;
 
                 heroBg.style.opacity = (1 - p1) * 0.75;
 
