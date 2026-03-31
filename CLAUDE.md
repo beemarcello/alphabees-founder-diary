@@ -5,23 +5,26 @@ Website für die "Alphabees Founder Diaries" — ein Blog von zwei Gründern (Ma
 
 ## Dateistruktur
 ```
-Aura_Export/
-├── alphabees-founder-diaries.html   # Landing Page (React-basiert)
-├── diaries.html                     # Blog-Übersichtsseite (Vanilla JS)
-├── toolkit.html                     # Produkt-Seite (AlphaLearn, AlphaCount)
-├── imprint.html                     # Impressum
-├── CLAUDE.md                        # Diese Datei
-├── DESIGN.md                        # Design System Referenz
-├── partials/                        # Shared HTML Partials (alle Seiten außer diaries.html)
-│   ├── _header.html                 # Nav — wird via fetch geladen (NICHT von diaries.html — dort inline)
-│   ├── _footer.html                 # Footer — wird via fetch geladen von allen Seiten
-│   └── _sidebar.html               # Sidebar — wird via fetch geladen von _template-auto.html
-├── diaries/                         # Einzelne Diary-Artikel
-│   ├── index.json                   # Artikel-Index — wird von diaries.html dynamisch geladen
-│   ├── _template.html               # Standalone Template (Nav + Sidebar inline, Footer via fetch)
-│   └── _template-auto.html         # Automation Template (Nav + Sidebar + Footer alle via fetch)
+alphabees-founder-diary/           # GitHub Repo Root
+├── index.html                     # Landing Page (React-basiert) — früher alphabees-founder-diaries.html
+├── diaries.html                   # Blog-Übersichtsseite (Vanilla JS)
+├── toolkit.html                   # Produkt-Seite (AlphaLearn, AlphaCount)
+├── imprint.html                   # Impressum
+├── .nojekyll                      # Verhindert Jekyll-Blocking von _prefixed Dateien auf GitHub Pages
+├── CLAUDE.md                      # Diese Datei
+├── DESIGN.md                      # Design System Referenz
+├── partials/                      # Shared HTML Partials (alle Seiten außer diaries.html)
+│   ├── _header.html               # Nav — wird via fetch geladen (NICHT von diaries.html — dort inline)
+│   ├── _footer.html               # Footer — wird via fetch geladen von allen Seiten
+│   └── _sidebar.html             # Sidebar — wird via fetch geladen von _template-auto.html
+├── diaries/                       # Einzelne Diary-Artikel
+│   ├── index.json                 # Artikel-Index — wird von diaries.html dynamisch geladen
+│   ├── _template.html             # Standalone Template (Nav + Sidebar inline, Footer via fetch)
+│   └── _template-auto.html       # Automation Template (Nav + Sidebar + Footer alle via fetch)
 ├── assets/
-│   ├── palm_scroll_animation/       # plant_left_front.webp, plant_right_front.webp
+│   ├── palm_scroll_animation/     # plant_left_front.webp, plant_right_front.webp
+│   │                              # WICHTIG: Beide Bilder sind bereits korrekt orientiert —
+│   │                              # plant_right_front.webp zeigt nach links (inward), KEIN scaleX nötig
 │   ├── founder-diary-categories_small/  # Hero-Bilder für Blog-Karten (Retro Pixel Art)
 │   │   ├── Design_System.webp
 │   │   ├── Error_Mistakes_Fails.webp
@@ -36,23 +39,42 @@ Aura_Export/
 │   │   ├── Sales.webp
 │   │   ├── Tool_Testing_Technology_Lab.webp
 │   │   └── Welcome.webp
+│   ├── Alphabees_Founder_Diaries.webp   # Hintergrundbild Landing Page
 │   ├── Marcel_Founder_Diaries.webp
 │   ├── Lasse_Founder_Diaries.webp
 │   └── Alphabees_founder_diaries_Logo_white.svg
 └── fonts/
-    ├── Space_Mono/                  # SpaceMono-Regular.ttf, Bold.ttf, Italic.ttf, BoldItalic.ttf
-    └── bigola-display-font/         # bigola-display-regular.otf, italic.otf, outline.otf
+    ├── Space_Mono/                # SpaceMono-Regular.ttf, Bold.ttf, Italic.ttf, BoldItalic.ttf
+    └── bigola-display-font/       # bigola-display-regular.otf, italic.otf, outline.otf
 ```
 
+## Deployment
+- **GitHub Repository**: `https://github.com/beemarcello/alphabees-founder-diary`
+- **GitHub Pages URL**: `https://beemarcello.github.io/alphabees-founder-diary/`
+- **`.nojekyll`** im Root: notwendig, damit GitHub Pages Dateien mit `_` Prefix ausliefert (sonst 404 auf Partials)
+- Domain noch ausstehend — muss in Cloudflare verbunden werden
+
 ## Technischer Stack
-- **Landing Page**: React (via CDN Babel), Tailwind CSS
+- **Landing Page** (`index.html`): React (via CDN Babel), Tailwind CSS
 - **Alle anderen Seiten**: Vanilla HTML/CSS/JS, keine externen Frameworks
-- **Fonts**: Lokal eingebunden via `@font-face` (nicht über Google Fonts CDN)
+- **Fonts**: Lokal eingebunden via `@font-face` auf allen Seiten — kein CDN (CDN wird auf Mobile blockiert)
 - **Partials**: Werden via `fetch('partials/_*.html')` geladen (bzw. `fetch('../partials/_*.html')` aus `diaries/`)
 - **Header auf diaries.html**: Direkt inlined (NICHT via Partial) — so funktioniert die Subscribe-Animation zuverlässig
-- **Nav auf Seiten mit Partial-Header**: MutationObserver erkennt wenn Nav ins DOM geladen wurde, dann `--nav-height` setzen + Scroll-Handler + Subscribe-Animation
+- **Nav auf Seiten mit Partial-Header**: MutationObserver erkennt wenn Nav ins DOM geladen wurde, dann `--nav-height` setzen + Scroll-Handler + Subscribe-Animation + Hamburger-Wiring
 
 ## Wichtige Implementierungsdetails
+
+### Landing Page (index.html)
+- React + Babel via CDN, Tailwind CSS
+- Hintergrundbild: `assets/Alphabees_Founder_Diaries.webp` (lokales Asset — kein Unsplash)
+- Fonts alle lokal via `@font-face`:
+  ```css
+  @font-face { font-family: 'Space Mono'; src: url('fonts/Space_Mono/SpaceMono-Regular.ttf') format('truetype'); font-weight: 400; }
+  @font-face { font-family: 'Space Mono'; src: url('fonts/Space_Mono/SpaceMono-Bold.ttf') format('truetype'); font-weight: 700; }
+  @font-face { font-family: 'Bigola Display'; src: url('fonts/bigola-display-font/bigola-display-regular.otf') format('opentype'); font-weight: 400; }
+  ```
+- Typewriter-Animation: Startdelay 400ms, Zeichengeschwindigkeit 30–55ms
+- React Nav: Hamburger-State + Mobile Overlay (inline in Komponente, kein Partial)
 
 ### Hero-Animation (diaries.html)
 - `#hero-wrapper`: height 285vh → sticky hält 185vh an
@@ -61,13 +83,20 @@ Aura_Export/
 - **Phase 2** (1.5vh→1.85vh scroll): H1 faded aus
 - Nach Phase 2: normaler Seiten-Scroll, Palmen bleiben fix
 
-### Palmenblätter
+### Palmenblätter (diaries.html)
 - `position: fixed; z-index: 100; pointer-events: none`
 - Nur Front-Layer aktiv: `plant_left_front.webp` + `plant_right_front.webp`
 - CSS Filter: `hue-rotate(58deg) saturate(0.50) brightness(0.68) contrast(1.10)`
 - `mix-blend-mode: screen` auf dem `<img>` (nicht auf Container — verhindert Naht-Artefakte)
-- Start: `translateX(-15%)` / `translateX(15%) scaleX(-1)`
-- Rest: `translateX(-72%)` / `translateX(72%) scaleX(-1)`
+- **KEIN `scaleX(-1)`** — beide Bilder sind bereits korrekt orientiert (rechtes Bild zeigt nach links)
+- CSS Start: `#plant-left-front { left: 0; transform: translateX(-15%); }` / `#plant-right-front { right: 0; transform: translateX(15%); }`
+- `object-position`: links `right center`, rechts `left center`
+- JS transforms (kein scaleX):
+  ```javascript
+  plantLF.style.transform = `translateX(${xL}%)`;
+  plantRF.style.transform = `translateX(${-xL}%)`;
+  ```
+- **Stacking Context**: `#hero-scene` hat `z-index: 45` (oberhalb Filter-Bar z-index 40, unterhalb Nav z-index 50) — damit liegen die Palmen auch über der sticky Filter-Bar
 
 ### Filter-Bar (diaries.html)
 - `id="filter-bar"` — Anchor-Target für Back-Links aus Diary-Artikeln
@@ -83,6 +112,15 @@ Aura_Export/
 - Beim Klick auf "subscribe": Eingabefelder fahren mit `max-width` Transition rein
 - Name-Feld: `max-width 1100ms`, Email-Feld: `max-width 900ms` mit 180ms Delay
 - Button-Text faded aus, Pfeil (→) erscheint nach 500ms
+
+### Mobile Hamburger Nav
+- Implementiert auf allen Seiten
+- `_header.html` Partial enthält: Hamburger-Button `#mobile-menu-btn` + Fullscreen-Overlay `#mobile-nav-overlay` + JS-Wiring
+- CSS: bei `max-width: 768px` werden `.nav-links` und `.nav-subscribe-wrap` ausgeblendet, Hamburger erscheint
+- Hamburger-Animaton: 3 Striche → X (scaleX + rotate)
+- Overlay: `position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 49`
+- **Auf diaries.html**: Hamburger + Overlay direkt inline im HTML (da kein Partial-Header)
+- **Auf toolkit.html / imprint.html**: Hamburger-Wiring MUSS im MutationObserver erfolgen (Nav lädt async)
 
 ### MutationObserver Pattern (für Seiten mit Partial-Header)
 Wird auf `toolkit.html`, `imprint.html` und `_template-auto.html` verwendet:
@@ -105,6 +143,23 @@ const headerObserver = new MutationObserver(function() {
     const btn = nav.querySelector('#nav-subscribe-btn');
     const wrap = nav.querySelector('#nav-subscribe-wrap');
     if (btn && wrap) btn.addEventListener('click', function() { wrap.classList.add('expanded'); });
+    // Hamburger-Wiring (Nav kommt aus Partial — muss hier verdrahtet werden)
+    const hamburger = document.getElementById('mobile-menu-btn');
+    const overlay = document.getElementById('mobile-nav-overlay');
+    if (hamburger && overlay) {
+        hamburger.addEventListener('click', function() {
+            const isOpen = hamburger.classList.toggle('open');
+            overlay.classList.toggle('open', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+        overlay.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                hamburger.classList.remove('open');
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+    }
 });
 headerObserver.observe(document.getElementById('site-header'), { childList: true, subtree: true });
 ```
@@ -139,7 +194,7 @@ headerObserver.observe(document.getElementById('site-header'), { childList: true
 - AlphaCount: Feature-Liste mit Pink-Dots + Early Bird Box (Pink-Gradient) mit Waitlist-Formular
 - "More tools coming" Teaser-Block
 - Newsletter CTA Box (Cyan-Gradient, gleich wie diaries.html und _template.html)
-- Header + Footer via Partial, MutationObserver Pattern
+- Header + Footer via Partial, MutationObserver Pattern (inkl. Hamburger-Wiring)
 
 ## Newsletter CTA Box (einheitliches Design auf allen Seiten)
 ```css
@@ -154,12 +209,12 @@ Verwendet auf: `diaries.html`, `diaries/_template.html`, `toolkit.html`
 
 ## Ausstehende Aufgaben
 
-### Newsletter-Datenbank einbinden (5 Stellen)
+### Newsletter-Datenbank einbinden (6 Stellen)
 1. `diaries.html` — Header Nav Subscribe-Formular (Name + Email)
 2. `diaries.html` — Newsletter-Block unten
 3. `toolkit.html` — Newsletter-Block unten
-4. `alphabees-founder-diaries.html` — Header Nav Subscribe (React-Komponente)
-5. `alphabees-founder-diaries.html` — Newsletter-Block am Ende der Seite
+4. `index.html` — Header Nav Subscribe (React-Komponente)
+5. `index.html` — Newsletter-Block am Ende der Seite
 6. `toolkit.html` — AlphaCount Early Bird Waitlist-Formular (separates Ziel)
 
 ### Domain & Deployment
@@ -178,6 +233,10 @@ Verwendet auf: `diaries.html`, `diaries/_template.html`, `toolkit.html`
 - `_header.html` Partial wird von `diaries.html` NICHT verwendet — dort inline wegen Subscribe-Animation
 - Alle Nav-Links sagen "diary" (singular) — bewusst vereinheitlicht
 - `backdrop-filter` auf Nav erzeugt eigenen Stacking Context — plant layers (z-index 100) liegen drüber, haben aber `pointer-events: none`
+- `#hero-scene` hat `z-index: 45` statt 10 — nötig, damit Palmen über sticky Filter-Bar (z-index 40) gerendert werden
+- Palmen-Bilder sind bereits korrekt orientiert — **NIE `scaleX(-1)` hinzufügen**, weder in CSS noch JS
+- Wenn JS `style.transform` setzt, überschreibt es die CSS `transform` komplett — scaleX muss immer im JS-String enthalten sein wenn es gebraucht wird
 - Space Mono hat kein Semibold — für bessere Lesbarkeit höhere Opacity statt Fontweight nutzen
-- `imprint.html` hatte früher Google Fonts CDN — jetzt lokale Fonts via `@font-face`
+- Fonts nie via CDN laden — auf Mobile werden externe Font-CDNs blockiert → immer lokale `@font-face`
 - `infrastructure-server-operations.webp` — umbenannt von `Infrastructure — Server_Operations.webp` (Leerzeichen + Em-Dash verursachten URL-Probleme)
+- GitHub Pages blockiert Dateien mit `_` Prefix ohne `.nojekyll` im Root

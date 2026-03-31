@@ -18,6 +18,7 @@
 - **Space Mono** — Alles andere, monospace (lokal: `fonts/Space_Mono/`)
   - Gewichte: Regular (400), Bold (700) — kein Semibold verfügbar
   - Für Lesbarkeit: höhere Opacity statt Bold verwenden
+- **Fonts immer lokal via `@font-face`** — CDN-Fonts werden auf Mobile blockiert
 
 ### Schriftgrößen & Farben (diaries.html)
 | Element | Größe | Farbe |
@@ -74,6 +75,15 @@
 - Subscribe Button Hover: weißer Hintergrund, schwarzer Text
 - Subscribe Expand: Eingabefelder fahren via `max-width` Transition rein
 
+### Mobile Nav (Hamburger)
+- Breakpoint: `max-width: 768px` — desktop Nav-Links + Subscribe-Wrap verschwinden, Hamburger erscheint
+- Hamburger-Button `#mobile-menu-btn`: 3 Striche (22px × 2px), `rgba(255,255,255,0.88)`
+- Animation auf `.open`: Strich 1 → `translateY(7px) rotate(45deg)`, Strich 2 → `opacity 0 scaleX(0)`, Strich 3 → `translateY(-7px) rotate(-45deg)`
+- Overlay `#mobile-nav-overlay`: `position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 49`
+- Overlay Nav-Links: Space Mono, 20px, `rgba(255,255,255,0.72)` → `#fff` on hover/active
+- Subscribe-Button im Overlay `.mob-sub-btn`: Pill, `rgba(255,255,255,0.10)` background, 13px
+- Body `overflow: hidden` während Overlay offen
+
 ### Newsletter CTA Box (einheitlich auf allen Seiten)
 ```css
 .newsletter-inner {
@@ -121,12 +131,38 @@ Verwendet auf: `diaries.html`, `diaries/_template.html`, `toolkit.html`
 - In Development: `color: #fbbf24`, bg `rgba(251,191,36,0.08)`, border `rgba(251,191,36,0.20)`
 - Puls-Animation auf Status-Dot: `opacity 2s ease-in-out infinite`
 
-## Palmenblätter — CSS Filter
+## Palmenblätter — CSS & Stacking
+
+### CSS Filter
 ```css
 filter: hue-rotate(58deg) saturate(0.50) brightness(0.68) contrast(1.10);
 ```
 - `hue-rotate(58deg)`: verschiebt Grün (120°) → Cyan/Teal (178°), passend zu `#0CE3EC`
 - `mix-blend-mode: screen` auf `<img>` (nicht auf Container)
+
+### Positionierung & Transform
+- **KEIN `scaleX(-1)`** — beide Bilder (`plant_left_front.webp`, `plant_right_front.webp`) sind bereits korrekt orientiert
+- `plant_left_front.webp`: Blätter zeigen nach rechts (inward) ✓
+- `plant_right_front.webp`: Blätter zeigen nach links (inward) ✓
+- `object-position`: links `right center`, rechts `left center`
+- CSS Startpositionen: `translateX(-15%)` links / `translateX(15%)` rechts
+- JS transforms:
+  ```javascript
+  plantLF.style.transform = `translateX(${xL}%)`;
+  plantRF.style.transform = `translateX(${-xL}%)`;   // kein scaleX!
+  ```
+
+### Z-Index Stacking (diaries.html)
+| Element | z-index | Grund |
+|---|---|---|
+| Nav | 50 | Oberste Schicht |
+| Mobile Nav Overlay | 49 | Direkt unter Nav |
+| `#hero-scene` | 45 | Über Filter-Bar, unter Nav — damit Palmen über Filter-Bar gerendert werden |
+| `.plant-layer` | 100 | Innerhalb des hero-scene Stacking Contexts |
+| Filter-Bar | 40 | Sticky unter Hero-Palmen |
+| Mobile Hamburger Button | 101 | Immer sichtbar |
+
+> **Wichtig**: `#hero-scene` hat `position: sticky` und erzeugt einen Stacking Context. Die darin enthaltenen `.plant-layer` (z-index 100) konkurrieren auf der Ebene ihres Elternelements (hero-scene, z-index 45) — nicht global. Deshalb muss `#hero-scene` höher als der Filter-Bar (40) stehen.
 
 ## Scroll-Animation Werte
 ```javascript
@@ -210,3 +246,14 @@ Neue Bilder mit diesen Prompts generieren (Midjourney / DALL-E):
 - **Subscribe Expand**: Name 1100ms, Email 900ms + 180ms delay, `cubic-bezier(0.4, 0, 0.2, 1)`
 - **Scroll Hint**: `scrollHintPulse` 2s ease-in-out infinite
 - **Status Badge Pulse**: `opacity` 2s ease-in-out infinite (Toolkit)
+- **Hamburger → X**: `transform 0.3s ease, opacity 0.3s ease`
+- **Typewriter (index.html)**: Startdelay 400ms, Zeichengeschwindigkeit 30–55ms random
+
+## Mobile Breakpoints
+| Breakpoint | Änderungen |
+|---|---|
+| `≤ 900px` | Seitenpadding 48px → 24px, Blog-Grid 3-spaltig → 1-spaltig, Featured Card vertikal |
+| `≤ 768px` | Desktop Nav verschwindet, Hamburger erscheint; Nav-Padding reduziert |
+| `≤ 600px` | Toolkit Grid 2-spaltig → 1-spaltig, Early Bird Box padding reduziert |
+
+Scroll-Animation auf Mobile (`≤ 900px`): Palmen-Slide deaktiviert → nur Fade-in (weniger Ablenkung auf kleinen Screens)
