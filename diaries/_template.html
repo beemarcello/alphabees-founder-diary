@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary Title | Alphabees Founder Diaries</title>
+    <meta name="description" content="Short description of this diary entry.">
+
+    <style>
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('../fonts/Space_Mono/SpaceMono-Regular.ttf') format('truetype');
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('../fonts/Space_Mono/SpaceMono-Italic.ttf') format('truetype');
+            font-weight: 400; font-style: italic;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('../fonts/Space_Mono/SpaceMono-Bold.ttf') format('truetype');
+            font-weight: 700; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Bigola Display';
+            src: url('../fonts/bigola-display-font/bigola-display-regular.otf') format('opentype');
+            font-weight: 400; font-style: normal;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: #000;
+            color: rgba(245,245,245,0.88);
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            line-height: 1.85;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Nav ── */
+        nav {
+            padding: 28px 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.35s ease;
+        }
+        nav.nav-hidden { transform: translateY(-100%); }
+        nav a.logo { display: inline-block; text-decoration: none; opacity: 0.7; transition: opacity 0.3s; }
+        nav a.logo:hover { opacity: 1; }
+        nav a.logo img { height: 36px; display: block; }
+        .nav-links {
+            display: flex; align-items: center; gap: 32px;
+            background: rgba(0,0,0,0.20); backdrop-filter: blur(12px);
+            padding: 10px 28px; border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-links a {
+            font-size: 12px; letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.72); text-decoration: none; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: rgba(255,255,255,0.90); }
+        .nav-links a.active { color: #F990E8; }
+        .nav-subscribe-wrap { display: flex; align-items: center; }
+        .subscribe-field { max-width: 0; opacity: 0; overflow: hidden; flex-shrink: 0; }
+        .subscribe-field-inner { padding-right: 10px; width: 158px; }
+        #sub-field-name { transition: max-width 1100ms cubic-bezier(0.4,0,0.2,1), opacity 450ms ease; }
+        #sub-field-email { transition: max-width 900ms cubic-bezier(0.4,0,0.2,1) 180ms, opacity 450ms ease 180ms; }
+        .nav-subscribe-wrap.expanded #sub-field-name { max-width: 158px; opacity: 1; }
+        .nav-subscribe-wrap.expanded #sub-field-email { max-width: 196px; opacity: 1; }
+        .subscribe-input {
+            width: 100%; padding: 8px 16px; border-radius: 100px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.20);
+            color: rgba(255,255,255,0.85); font-family: 'Space Mono', monospace;
+            font-size: 11px; outline: none; transition: border-color 0.3s;
+        }
+        .subscribe-input::placeholder { color: rgba(255,255,255,0.35); }
+        .subscribe-input:focus { border-color: rgba(12,227,236,0.60); }
+        .nav-subscribe {
+            font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.88); background: transparent;
+            border: 1px solid rgba(255,255,255,0.20); border-radius: 100px;
+            padding: 8px 20px; cursor: pointer; white-space: nowrap; overflow: hidden;
+            position: relative;
+            transition: padding 600ms cubic-bezier(0.4,0,0.2,1), background-color 300ms, color 300ms;
+        }
+        .nav-subscribe:hover { background: #fff; color: #000; }
+        .sub-text { display: inline-block; transition: opacity 300ms ease, transform 300ms ease; }
+        .sub-arrow {
+            display: inline-block; position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%,-50%) translateX(-8px); opacity: 0;
+            transition: opacity 300ms ease 500ms, transform 300ms ease 500ms;
+        }
+        .nav-subscribe-wrap.expanded .nav-subscribe { padding: 8px 16px; }
+        .nav-subscribe-wrap.expanded .sub-text { opacity: 0; transform: scale(0.6); }
+        .nav-subscribe-wrap.expanded .sub-arrow { opacity: 1; transform: translate(-50%,-50%) translateX(0); }
+
+        /* ── Article Hero ── */
+        #article-hero {
+            padding: 64px 48px 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .article-meta {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 24px; flex-wrap: wrap;
+        }
+        .article-category {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: #0CE3EC; border: 1px solid rgba(12,227,236,0.30);
+            padding: 4px 12px; border-radius: 100px;
+        }
+        .article-meta-dot { width: 2px; height: 2px; border-radius: 50%; background: rgba(255,255,255,0.20); }
+        .article-date, .article-readtime {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.40);
+        }
+
+        #article-hero h1 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.1; letter-spacing: 0em;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 20px;
+            max-width: 780px;
+        }
+        .article-subtitle {
+            font-size: 15px; color: rgba(255,255,255,0.55);
+            line-height: 1.8; max-width: 640px; margin-bottom: 40px;
+        }
+
+        .hero-image {
+            width: 100%; height: 420px;
+            object-fit: cover; display: block;
+            border-radius: 4px 4px 0 0;
+            filter: grayscale(15%) contrast(105%);
+        }
+
+        /* ── Article Layout (2-column) ── */
+        #article-body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 48px 80px;
+        }
+        #article-layout {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 64px;
+            align-items: start;
+            padding-top: 56px;
+        }
+
+        /* ── Article Typography ── */
+        article h2 {
+            font-family: 'Bigola Display', serif;
+            font-size: 1.7rem; letter-spacing: 0em;
+            color: rgba(255,255,255,0.92);
+            margin: 52px 0 18px;
+            padding-left: 16px;
+            border-left: 2px solid #0CE3EC;
+            line-height: 1.2;
+        }
+        article h3 {
+            font-size: 13px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.12em; color: rgba(255,255,255,0.75);
+            margin: 36px 0 14px;
+        }
+        article p {
+            color: rgba(245,245,245,0.80);
+            margin-bottom: 20px; font-size: 14px; line-height: 1.9;
+        }
+        article p.intro {
+            font-size: 16px; color: rgba(255,255,255,0.72);
+            line-height: 1.85; margin-bottom: 32px;
+            padding-left: 16px;
+            border-left: 2px solid rgba(249,144,232,0.50);
+        }
+        article ul, article ol {
+            margin: 0 0 20px 0; padding: 0;
+            list-style: none; display: flex; flex-direction: column; gap: 10px;
+        }
+        article ul li, article ol li {
+            display: flex; align-items: flex-start; gap: 12px;
+            font-size: 14px; color: rgba(245,245,245,0.78); line-height: 1.8;
+        }
+        article ul li::before {
+            content: '';
+            display: block; width: 4px; height: 4px; min-width: 4px;
+            border-radius: 50%; background: #0CE3EC; margin-top: 0.65em;
+        }
+        article ol { counter-reset: ol-counter; }
+        article ol li::before {
+            counter-increment: ol-counter;
+            content: counter(ol-counter);
+            display: flex; align-items: center; justify-content: center;
+            min-width: 22px; height: 22px;
+            background: rgba(12,227,236,0.12); border: 1px solid rgba(12,227,236,0.30);
+            color: #0CE3EC; font-size: 10px; font-weight: 700;
+            border-radius: 4px; margin-top: 2px;
+        }
+        article strong { color: rgba(255,255,255,0.92); }
+        article code {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
+            padding: 2px 7px; border-radius: 4px;
+            font-family: 'Space Mono', monospace; font-size: 12px;
+            color: #0CE3EC;
+        }
+
+        /* ── Blockquote ── */
+        article blockquote {
+            margin: 32px 0; padding: 20px 28px;
+            border-left: 3px solid #F990E8;
+            background: rgba(249,144,232,0.04);
+            border-radius: 0 8px 8px 0;
+        }
+        article blockquote p {
+            font-size: 15px; color: rgba(255,255,255,0.78);
+            font-style: italic; margin-bottom: 0; line-height: 1.75;
+        }
+
+        /* ── Tool Card ── */
+        .tool-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 24px; margin: 32px 0;
+        }
+        .tool-card-label {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: #0CE3EC; margin-bottom: 16px;
+        }
+        .tool-card-title {
+            font-size: 13px; font-weight: 700;
+            color: rgba(255,255,255,0.88); margin-bottom: 16px;
+        }
+        .tool-table { width: 100%; border-collapse: collapse; }
+        .tool-table td {
+            padding: 10px 0; font-size: 12px; line-height: 1.6;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: top;
+        }
+        .tool-table tr:last-child td { border-bottom: none; }
+        .tool-table td:first-child {
+            color: rgba(255,255,255,0.40); width: 28%;
+            text-transform: uppercase; letter-spacing: 0.10em; font-size: 10px;
+            padding-right: 16px; padding-top: 12px;
+        }
+        .tool-table td:last-child { color: rgba(245,245,245,0.80); }
+        .status-ok { color: #4ade80; }
+        .status-warn { color: #fbbf24; }
+        .status-bad { color: #f87171; }
+
+        /* ── Steps ── */
+        .steps { margin: 32px 0; display: flex; flex-direction: column; gap: 0; }
+        .step {
+            display: flex; gap: 20px;
+            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .step:last-child { border-bottom: none; }
+        .step-number {
+            display: flex; align-items: center; justify-content: center;
+            min-width: 32px; height: 32px;
+            background: rgba(12,227,236,0.10); border: 1px solid rgba(12,227,236,0.25);
+            color: #0CE3EC; font-size: 11px; font-weight: 700;
+            border-radius: 6px; flex-shrink: 0; margin-top: 2px;
+        }
+        .step-content h5 {
+            font-size: 13px; font-weight: 700;
+            color: rgba(255,255,255,0.88); margin-bottom: 6px;
+        }
+        .step-content p {
+            font-size: 13px; color: rgba(245,245,245,0.60);
+            margin-bottom: 0; line-height: 1.75;
+        }
+
+        /* ── Key Takeaways ── */
+        .takeaways {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px; padding: 28px; margin: 32px 0;
+        }
+        .takeaways-label {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: #F990E8; margin-bottom: 20px;
+        }
+        .takeaway-item {
+            display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start;
+        }
+        .takeaway-item:last-child { margin-bottom: 0; }
+        .takeaway-number {
+            display: flex; align-items: center; justify-content: center;
+            min-width: 26px; height: 26px; border-radius: 50%;
+            background: rgba(249,144,232,0.12); border: 1px solid rgba(249,144,232,0.30);
+            color: #F990E8; font-size: 10px; font-weight: 700; flex-shrink: 0;
+        }
+        .takeaway-text {
+            font-size: 13px; color: rgba(245,245,245,0.78); line-height: 1.75; padding-top: 2px;
+        }
+
+        /* ── Highlight Box ── */
+        .highlight-box {
+            background: rgba(12,227,236,0.04);
+            border: 1px solid rgba(12,227,236,0.15);
+            border-radius: 8px; padding: 20px 24px; margin: 28px 0;
+        }
+        .highlight-box p {
+            color: rgba(12,227,236,0.85) !important;
+            font-size: 13px !important; margin-bottom: 0 !important;
+        }
+
+        /* ── Outlook / Reflection ── */
+        .outlook {
+            border: 1px dashed rgba(255,255,255,0.12);
+            border-radius: 8px; padding: 24px; margin: 32px 0;
+        }
+        .outlook-label {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.40); margin-bottom: 12px;
+        }
+        .outlook p { font-size: 13px; color: rgba(245,245,245,0.65); margin-bottom: 0; }
+
+        /* ── Tags ── */
+        .article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .article-tag {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em;
+            color: rgba(255,255,255,0.40); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 100px; padding: 4px 12px;
+        }
+
+        /* ── FAQ Accordion ── */
+        .faq { margin-top: 52px; }
+        .faq-label {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.35); margin-bottom: 20px;
+        }
+        .faq-item {
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 6px; overflow: hidden; margin-bottom: 6px;
+        }
+        .faq-item summary {
+            list-style: none; cursor: pointer;
+            padding: 14px 18px; font-size: 12px; font-weight: 700;
+            color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.02);
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; user-select: none; transition: background 0.15s, color 0.15s;
+            letter-spacing: 0.02em;
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.95); }
+        .faq-item[open] summary { background: rgba(12,227,236,0.06); color: #0CE3EC; }
+        .faq-icon {
+            width: 18px; height: 18px; min-width: 18px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); display: flex;
+            align-items: center; justify-content: center;
+            transition: background 0.15s, transform 0.2s; font-size: 12px;
+            color: rgba(255,255,255,0.40);
+        }
+        .faq-item[open] .faq-icon { background: rgba(12,227,236,0.20); color: #0CE3EC; transform: rotate(45deg); }
+        .faq-body {
+            padding: 14px 18px 18px; font-size: 13px; line-height: 1.8;
+            color: rgba(245,245,245,0.65);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* ── Sidebar ── */
+        aside {
+            position: sticky;
+            top: var(--nav-height, 93px);
+        }
+        #sidebar-container { display: flex; flex-direction: column; gap: 16px; }
+
+        .sidebar-block {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 8px; padding: 20px;
+        }
+        .sidebar-label {
+            font-size: 9px; text-transform: uppercase; letter-spacing: 0.16em;
+            color: rgba(255,255,255,0.30); margin-bottom: 14px;
+        }
+        .sidebar-author { display: flex; align-items: center; gap: 12px; }
+        .sidebar-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.10);
+            flex-shrink: 0;
+        }
+        .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
+        .sidebar-author-name { font-size: 12px; color: rgba(255,255,255,0.80); font-weight: 700; }
+        .sidebar-author-date { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+        .sidebar-back {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; color: rgba(255,255,255,0.45);
+            text-decoration: none; transition: color 0.2s; letter-spacing: 0.04em;
+        }
+        .sidebar-back:hover { color: rgba(255,255,255,0.80); }
+
+        .sidebar-related { display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-related-item {
+            display: flex; flex-direction: column; gap: 2px;
+            padding: 8px; margin: 0 -8px; border-radius: 6px;
+            text-decoration: none; transition: background 0.2s;
+        }
+        .sidebar-related-item:hover { background: rgba(255,255,255,0.04); }
+        .sidebar-related-title { font-size: 11px; color: rgba(255,255,255,0.70); line-height: 1.45; }
+        .sidebar-related-item:hover .sidebar-related-title { color: rgba(255,255,255,0.92); }
+        .sidebar-related-meta { font-size: 10px; color: rgba(255,255,255,0.30); margin-top: 2px; }
+
+        .sidebar-cta {
+            background: linear-gradient(135deg, rgba(12,227,236,0.12), rgba(249,144,232,0.08));
+            border: 1px solid rgba(12,227,236,0.20);
+            border-radius: 8px; padding: 20px;
+        }
+        .sidebar-cta-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.90); margin-bottom: 8px; }
+        .sidebar-cta-text { font-size: 11px; color: rgba(255,255,255,0.50); line-height: 1.7; margin-bottom: 16px; }
+        .sidebar-cta-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: 'Space Mono', monospace; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 0.10em;
+            background: rgba(255,255,255,0.90); color: #000;
+            border: none; border-radius: 100px; padding: 8px 18px;
+            cursor: pointer; text-decoration: none; transition: background 0.25s;
+        }
+        .sidebar-cta-btn:hover { background: #0CE3EC; }
+
+        /* ── Newsletter ── */
+        .newsletter {
+            max-width: 1100px; margin: 64px auto 0; padding: 0 48px;
+        }
+        .newsletter-inner {
+            background: linear-gradient(135deg, rgba(12,227,236,0.08), rgba(249,144,232,0.05));
+            border: 1px solid rgba(12,227,236,0.20);
+            border-radius: 12px;
+            padding: 48px 56px; display: flex;
+            align-items: center; justify-content: space-between; gap: 48px;
+        }
+        .newsletter-text h2 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            line-height: 1.15;
+            color: rgba(255,255,255,0.85); margin-bottom: 10px;
+        }
+        .newsletter-text p { font-size: 12px; color: rgba(255,255,255,0.58); line-height: 1.9; max-width: 340px; }
+        .newsletter-form { display: flex; gap: 8px; flex-shrink: 0; }
+        .newsletter-form input {
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.75); padding: 10px 16px;
+            border-radius: 100px; outline: none; width: 180px; transition: border-color 0.25s;
+        }
+        .newsletter-form input::placeholder { color: rgba(255,255,255,0.45); }
+        .newsletter-form input:focus { border-color: rgba(249,144,232,0.4); }
+        .newsletter-form button {
+            font-family: 'Space Mono', monospace; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            background: rgba(255,255,255,0.90); color: #000;
+            border: none; border-radius: 100px; padding: 10px 22px;
+            cursor: pointer; transition: background 0.25s; white-space: nowrap;
+        }
+        .newsletter-form button:hover { background: #F990E8; }
+
+        /* ── Footer ── */
+        footer {
+            background: #000; border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 48px; display: flex;
+            justify-content: space-between; align-items: center; margin-top: 80px;
+        }
+        footer span, footer a {
+            font-size: 12px; color: rgba(255,255,255,0.50);
+            text-decoration: none; letter-spacing: 0.04em; transition: color 0.25s;
+        }
+        footer a:hover { color: rgba(255,255,255,0.70); }
+        footer .links { display: flex; gap: 20px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            nav, #article-hero, #article-body, .newsletter, footer { padding-left: 24px; padding-right: 24px; }
+            #article-layout { grid-template-columns: 1fr; }
+            aside { position: static; }
+            .newsletter-inner { flex-direction: column; padding: 36px 28px; gap: 28px; }
+            .newsletter-form { flex-direction: column; width: 100%; }
+            .newsletter-form input { width: 100%; }
+            .hero-image { height: 220px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Nav ── -->
+    <nav>
+        <a href="../alphabees-founder-diaries.html" class="logo">
+            <img src="../assets/Alphabees_founder_diaries_Logo_white.svg" alt="Alphabees Founder Diaries" />
+        </a>
+        <div class="nav-links">
+            <a href="../alphabees-founder-diaries.html#about">about</a>
+            <a href="../diaries.html" class="active">diary</a>
+            <a href="../toolkit.html">toolkit</a>
+        </div>
+        <div class="nav-subscribe-wrap" id="nav-subscribe-wrap">
+            <div class="subscribe-field" id="sub-field-name">
+                <div class="subscribe-field-inner">
+                    <input type="text" placeholder="First Name..." class="subscribe-input">
+                </div>
+            </div>
+            <div class="subscribe-field" id="sub-field-email">
+                <div class="subscribe-field-inner" style="width:186px">
+                    <input type="email" placeholder="E-Mail..." class="subscribe-input">
+                </div>
+            </div>
+            <button class="nav-subscribe" id="nav-subscribe-btn">
+                <span class="sub-text">subscribe</span>
+                <span class="sub-arrow">→</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ── Article Hero ── -->
+    <div id="article-hero">
+
+        <div class="article-meta">
+            <span class="article-category">Design</span>
+            <span class="article-meta-dot"></span>
+            <span class="article-date">March 2026</span>
+            <span class="article-meta-dot"></span>
+            <span class="article-readtime">6 min read</span>
+        </div>
+
+        <h1>How we built a design system that works across five brands without going insane</h1>
+
+        <p class="article-subtitle">
+            One Figma variable library. Five brand identities. Zero duplication. Here's the exact setup we use and the mistakes we made along the way.
+        </p>
+
+        <img class="hero-image" src="../assets/founder-diary-categories_small/Design_System.webp" alt="Article hero image">
+
+    </div>
+
+    <!-- ── Article Body ── -->
+    <div id="article-body">
+        <div id="article-layout">
+
+            <!-- Main Article -->
+            <article>
+
+                <p class="intro">
+                    This week was all about design systems and one question we kept asking ourselves: how do you maintain visual consistency across multiple brands without maintaining five separate systems?
+                </p>
+
+                <p>
+                    The trigger was simple. We had just launched our third brand under the Alphabees umbrella and realised that we were already duplicating work. Colors here, type scales there, the same components rebuilt three times.
+                </p>
+
+                <!-- H2 Section -->
+                <h2>The problem with separate design files</h2>
+
+                <p>
+                    When you have more than one brand, the natural instinct is to keep everything separate. A Figma file per brand, a component library per brand. Clean. Isolated. Easy to hand off.
+                </p>
+
+                <p>
+                    The problem shows up six months later when you update a button radius in one brand and then spend three days updating it everywhere else. We've been there.
+                </p>
+
+                <!-- Blockquote -->
+                <blockquote>
+                    <p>"The best design systems are the ones you forget are there. They just work, everywhere, all the time."</p>
+                </blockquote>
+
+                <!-- H3 + List -->
+                <h3>What we tried first</h3>
+
+                <ul>
+                    <li>Shared component library with brand-specific overrides per file</li>
+                    <li>A single "master" file that each brand file linked to</li>
+                    <li>Tokens plugins like Tokens Studio to sync variables across files</li>
+                </ul>
+
+                <!-- Tool Card -->
+                <div class="tool-card">
+                    <div class="tool-card-label">Tool Experiment</div>
+                    <div class="tool-card-title">Figma Variables + Foundation Library</div>
+                    <table class="tool-table">
+                        <tr>
+                            <td>Purpose</td>
+                            <td>Single source of truth for colors, spacing, typography across all brands</td>
+                        </tr>
+                        <tr>
+                            <td>Why we chose it</td>
+                            <td>Native Figma, no plugin dependency, works with MCP</td>
+                        </tr>
+                        <tr>
+                            <td>Time saved</td>
+                            <td>~4 hours per brand update</td>
+                        </tr>
+                        <tr>
+                            <td>Result</td>
+                            <td><span class="status-ok">✓ Working well</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- H2 + Steps -->
+                <h2>The setup that actually works</h2>
+
+                <p>
+                    After several failed attempts, here's the architecture we landed on. It uses Figma's native variable system and one foundation library that every brand file subscribes to.
+                </p>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h5>Foundation Library — brand-agnostic primitives</h5>
+                            <p>Base spacing scale, font sizes, border radii. Nothing brand-specific. All other libraries subscribe to this one.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h5>Brand Token Layer — one file per brand</h5>
+                            <p>Each brand overrides the foundation with its own colors, typeface and logo. Still subscribes to the same component structure.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h5>Component Library — built once, themed per brand</h5>
+                            <p>Buttons, cards, forms — all built with variable references so they automatically shift when the brand token changes.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h5>Page files — one per project</h5>
+                            <p>Consumes the component library and brand tokens. Never touches the foundation directly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highlight Box -->
+                <div class="highlight-box">
+                    <p>The rule we follow: if you find yourself editing the same thing in two places, it belongs in the foundation library — not in the brand files.</p>
+                </div>
+
+                <!-- H2 + Takeaways -->
+                <h2>What we learned</h2>
+
+                <div class="takeaways">
+                    <div class="takeaways-label">Key Takeaways</div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">1</div>
+                        <div class="takeaway-text">Start with the foundation layer first — even if you only have one brand. You will have more later.</div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">2</div>
+                        <div class="takeaway-text">Variables in Figma are only as powerful as your naming convention. Invest one afternoon in naming rules before you build anything.</div>
+                    </div>
+                    <div class="takeaway-item">
+                        <div class="takeaway-number">3</div>
+                        <div class="takeaway-text">Avoid plugin dependencies for the core system. Plugins break. Native Figma features don't (usually).</div>
+                    </div>
+                </div>
+
+                <!-- Outlook -->
+                <div class="outlook">
+                    <div class="outlook-label">What's next</div>
+                    <p>We're testing whether the same foundation layer can feed our web code directly via a Figma-to-CSS token export. If it works, one change in Figma updates the website automatically. More on that next week.</p>
+                </div>
+
+                <!-- Tags -->
+                <div class="article-tags">
+                    <span class="article-tag">Design</span>
+                    <span class="article-tag">Figma</span>
+                    <span class="article-tag">Systems</span>
+                    <span class="article-tag">Workflow</span>
+                </div>
+
+                <!-- FAQ -->
+                <div class="faq">
+                    <div class="faq-label">Frequently Asked</div>
+
+                    <details class="faq-item">
+                        <summary>
+                            Do you need to be on Figma's paid plan to use variables?
+                            <span class="faq-icon">+</span>
+                        </summary>
+                        <div class="faq-body">
+                            Variables are available on all Figma plans including the free tier. The limitation on free plans is the number of variable collections you can create, but for most small teams it's more than enough to get started.
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>
+                            How do you handle dark mode across brands?
+                            <span class="faq-icon">+</span>
+                        </summary>
+                        <div class="faq-body">
+                            Each brand token file has a light and dark mode variable set. Components reference semantic tokens like <code>color/surface/primary</code> instead of raw hex values. Switching modes swaps the entire token set in one click.
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>
+                            What happens when a brand needs a component that others don't?
+                            <span class="faq-icon">+</span>
+                        </summary>
+                        <div class="faq-body">
+                            Brand-specific components live in the brand's own component file, not in the shared library. They still consume the same foundation tokens, so they stay visually consistent. We only add to the shared library when at least two brands need the same component.
+                        </div>
+                    </details>
+
+                </div>
+
+            </article>
+
+            <!-- Sidebar -->
+            <aside>
+                <div id="sidebar-container">
+
+                    <div class="sidebar-block">
+                        <div class="sidebar-label">Published by</div>
+                        <div class="sidebar-author">
+                            <div class="sidebar-avatar">
+                                <img src="../assets/Marcel_Founder_Diaries.webp" alt="Marcel">
+                            </div>
+                            <div>
+                                <div class="sidebar-author-name">Marcel</div>
+                                <div class="sidebar-author-date">March 2026</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="../diaries.html#filter-bar" class="sidebar-back">
+                        ← Back to all diaries
+                    </a>
+
+                    <div class="sidebar-block">
+                        <div class="sidebar-label">More Diaries</div>
+                        <div class="sidebar-related">
+                            <a href="#" class="sidebar-related-item">
+                                <span class="sidebar-related-title">Automating internal workflows across multiple brands</span>
+                                <span class="sidebar-related-meta">Operations · March 2026</span>
+                            </a>
+                            <a href="#" class="sidebar-related-item">
+                                <span class="sidebar-related-title">Mistakes in early AI tool stack decisions</span>
+                                <span class="sidebar-related-meta">Mistakes · Jan 2026</span>
+                            </a>
+                            <a href="#" class="sidebar-related-item">
+                                <span class="sidebar-related-title">Running a two-person team with 10-person output</span>
+                                <span class="sidebar-related-meta">Operations · Dec 2025</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-cta">
+                        <div class="sidebar-cta-title">Get new diaries in your inbox.</div>
+                        <div class="sidebar-cta-text">One entry per week. Carefully distilled — only what actually matters.</div>
+                        <a href="#" class="sidebar-cta-btn">Subscribe free →</a>
+                    </div>
+
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <!-- ── Newsletter ── -->
+    <div class="newsletter">
+        <div class="newsletter-inner">
+            <div class="newsletter-text">
+                <h2>Get new diaries in your inbox.</h2>
+                <p>One entry per week. Carefully distilled — only what actually matters from what we built, tested and learned. No filler.</p>
+            </div>
+            <div class="newsletter-form">
+                <input type="text" placeholder="First name..." />
+                <input type="email" placeholder="E-mail..." />
+                <button>Subscribe →</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="site-footer"></div>
+
+    <script>
+        // Nav height + hide on scroll
+        (function() {
+            const nav = document.querySelector('nav');
+            function setNavHeight() {
+                document.documentElement.style.setProperty('--nav-height', nav.getBoundingClientRect().height + 'px');
+            }
+            setNavHeight();
+            window.addEventListener('resize', setNavHeight);
+            let lastY = 0;
+            window.addEventListener('scroll', function() {
+                const y = window.scrollY;
+                nav.classList.toggle('nav-hidden', y > lastY && y > 120);
+                lastY = y;
+            }, { passive: true });
+        })();
+
+        // Subscribe expand
+        document.getElementById('nav-subscribe-btn').addEventListener('click', function() {
+            document.getElementById('nav-subscribe-wrap').classList.add('expanded');
+        });
+
+        // Load footer partial
+        (async function() {
+            try {
+                const res = await fetch('../partials/_footer.html');
+                document.getElementById('site-footer').innerHTML = await res.text();
+            } catch(e) {}
+        })();
+    </script>
+
+</body>
+</html>

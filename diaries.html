@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder Diaries | Alphabees</title>
+    <meta name="description" content="Real-world documentation of building AI-first ventures. Tools, systems, mistakes and lessons from two serial founders.">
+
+    <style>
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-Italic.ttf') format('truetype');
+            font-weight: 400;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-BoldItalic.ttf') format('truetype');
+            font-weight: 700;
+            font-style: italic;
+        }
+        @font-face {
+            font-family: 'Bigola Display';
+            src: url('fonts/bigola-display-font/bigola-display-regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Bigola Display';
+            src: url('fonts/bigola-display-font/bigola-display-italic.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: #000;
+            color: rgba(245, 245, 245, 0.90);
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Background relief layer ── */
+        #bg-relief {
+            display: none;
+        }
+
+        /* ── Page shell ── */
+        #shell {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            pointer-events: all;
+        }
+
+        /* ── Nav ── */
+        nav {
+            padding: 28px 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.35s ease;
+        }
+        nav.nav-hidden {
+            transform: translateY(-100%);
+        }
+        nav a.logo {
+            display: inline-block;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        nav a.logo:hover { opacity: 1; }
+        nav a.logo img { height: 36px; display: block; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            background: rgba(0,0,0,0.20);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 28px;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-links a {
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.72);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: rgba(255,255,255,0.90); }
+        .nav-links a.active  { color: #F990E8; }
+        .nav-subscribe {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.88);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 100px;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+        .nav-subscribe:hover { background: #fff; color: #000; }
+
+        /* ── Subscribe expand ── */
+        .nav-subscribe-wrap {
+            display: flex;
+            align-items: center;
+        }
+        .subscribe-field {
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .subscribe-field-inner {
+            padding-right: 10px;
+            width: 158px;
+        }
+        #sub-field-name {
+            transition: max-width 1100ms cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 450ms ease;
+        }
+        #sub-field-email {
+            transition: max-width 900ms cubic-bezier(0.4, 0, 0.2, 1) 180ms,
+                        opacity 450ms ease 180ms;
+        }
+        .nav-subscribe-wrap.expanded #sub-field-name {
+            max-width: 158px;
+            opacity: 1;
+        }
+        .nav-subscribe-wrap.expanded #sub-field-email {
+            max-width: 196px;
+            opacity: 1;
+        }
+        .subscribe-input {
+            width: 100%;
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.20);
+            color: rgba(255,255,255,0.85);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            outline: none;
+            transition: border-color 0.3s;
+            white-space: nowrap;
+        }
+        .subscribe-input::placeholder { color: rgba(255,255,255,0.35); }
+        .subscribe-input:focus { border-color: rgba(12,227,236,0.60); }
+
+        .nav-subscribe {
+            transition: padding 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                        background-color 300ms, color 300ms;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+        }
+        .sub-text {
+            display: inline-block;
+            transition: opacity 300ms ease, transform 300ms ease;
+        }
+        .sub-arrow {
+            display: inline-block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateX(-8px);
+            opacity: 0;
+            transition: opacity 300ms ease 500ms, transform 300ms ease 500ms;
+        }
+        .nav-subscribe-wrap.expanded .nav-subscribe {
+            padding: 8px 16px;
+        }
+        .nav-subscribe-wrap.expanded .sub-text {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+        .nav-subscribe-wrap.expanded .sub-arrow {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+
+        /* ── Nav roll animation (same as main page) ── */
+        .nav-roll {
+            display: inline-flex;
+            align-items: center;
+            height: 1.25em;
+            overflow: hidden;
+            position: relative;
+        }
+        .nav-roll__inner {
+            position: relative;
+            display: inline-block;
+            height: 1.25em;
+        }
+        .nav-roll__front,
+        .nav-roll__back {
+            display: block;
+            letter-spacing: 0.04em;
+            will-change: transform;
+            line-height: 1.25em;
+        }
+        .nav-roll__back {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #000;
+            transform: translateY(160%);
+            pointer-events: none;
+        }
+        .nav-subscribe:hover .nav-roll__front {
+            transform: translateY(-160%);
+            transition: transform 1100ms cubic-bezier(0.08, 0.92, 0.2, 1.12);
+        }
+        .nav-subscribe .nav-roll__front {
+            transition: transform 1100ms cubic-bezier(0.12, 0.8, 0.2, 1);
+        }
+        .nav-subscribe .nav-roll__back {
+            transition: transform 900ms cubic-bezier(0.2, 1.1, 0.2, 1);
+        }
+        .nav-subscribe:hover .nav-roll__back {
+            transform: translateY(0%);
+        }
+
+        /* ── Page header ── */
+        .page-header {
+            max-width: 1200px;
+            width: 100%;
+            margin: 80px auto 64px;
+            padding: 0 48px;
+        }
+        .page-header .eyebrow {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.50);
+            margin-bottom: 16px;
+        }
+        .page-header h1 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            letter-spacing: 0em;
+            color: rgba(255,255,255,0.88);
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+        .page-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.62);
+            max-width: 480px;
+            line-height: 1.9;
+        }
+
+        /* ── Filter bar ── */
+        .filter-bar {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto 56px;
+            padding: 12px 48px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: var(--nav-height, 93px);
+            z-index: 40;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .filter-bar::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 100%;
+            height: var(--nav-height, 93px);
+            background: rgba(0, 0, 0, 0.88);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .filter-bar.is-sticky::before {
+            opacity: 1;
+        }
+
+        .filter-btn {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+            color: rgba(255,255,255,0.80);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 100px;
+            padding: 7px 16px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: rgba(255,255,255,0.95);
+            border-color: rgba(255,255,255,0.30);
+            background: rgba(255,255,255,0.06);
+        }
+        .filter-btn.active {
+            color: #F990E8;
+            border-color: rgba(249,144,232,0.40);
+            background: rgba(249,144,232,0.06);
+        }
+
+        /* ── Filter dropdown ── */
+        .filter-dropdown {
+            position: relative;
+        }
+        .dropdown-arrow {
+            font-size: 10px;
+            margin-left: 4px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .filter-dropdown.open .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        .filter-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: rgba(10, 10, 10, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 6px;
+            min-width: 160px;
+            z-index: 100;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .filter-dropdown.open .filter-dropdown-menu {
+            display: flex;
+        }
+        .dropdown-item {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: rgba(255,255,255,0.55);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.85);
+        }
+        .dropdown-item.active {
+            color: #F990E8;
+            background: rgba(249,144,232,0.06);
+        }
+
+        /* ── Filter search ── */
+        .filter-search {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 100px;
+            padding: 5px 14px;
+            transition: border-color 0.25s;
+        }
+        .filter-search:focus-within {
+            border-color: rgba(255,255,255,0.20);
+        }
+        .search-icon {
+            font-size: 16px;
+            color: rgba(255,255,255,0.55);
+            line-height: 1;
+            pointer-events: none;
+        }
+        .search-input {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: rgba(255,255,255,0.90);
+            width: 140px;
+        }
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* ── Blog grid ── */
+        .blog-grid {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 48px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        /* Featured first post — full width */
+        .post-card:first-child {
+            grid-column: 1 / -1;
+        }
+
+        /* ── Card ── */
+        .post-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.015);
+            transition: border-color 0.35s, background 0.35s;
+            overflow: hidden;
+        }
+        .post-card:hover {
+            border-color: rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.035);
+        }
+
+        /* First card (featured) horizontal layout */
+        .post-card:first-child {
+            flex-direction: row;
+        }
+        .post-card:first-child .card-image {
+            width: 52%;
+            height: 420px;
+            flex-shrink: 0;
+        }
+        .post-card:first-child .card-body {
+            padding: 52px 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .post-card:first-child .card-title {
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+        }
+        .post-card:first-child .card-excerpt {
+            font-size: 13px;
+            max-width: 420px;
+        }
+        .post-card:first-child .featured-badge {
+            display: inline-block;
+        }
+
+        /* Normal cards */
+        .card-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(105%);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s;
+        }
+        .post-card:hover .card-image img {
+            transform: scale(1.04);
+            filter: grayscale(0%) contrast(105%);
+        }
+        .card-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.65) 100%);
+        }
+
+        .card-body {
+            padding: 28px 32px 32px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .card-tag {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #A89F91;
+        }
+        .card-date {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.48);
+        }
+        .meta-dot {
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            flex-shrink: 0;
+        }
+
+        .featured-badge {
+            display: none;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #F990E8;
+            border: 1px solid rgba(249,144,232,0.3);
+            border-radius: 100px;
+            padding: 3px 10px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .card-title {
+            font-family: 'Bigola Display', serif;
+            font-size: 1.25rem;
+            letter-spacing: 0em;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.25;
+            margin-bottom: 12px;
+            transition: color 0.25s;
+        }
+        .post-card:hover .card-title {
+            color: rgba(255,255,255,0.97);
+        }
+
+        .card-excerpt {
+            font-size: 12px;
+            color: rgba(255,255,255,0.58);
+            line-height: 1.9;
+            flex: 1;
+            margin-bottom: 24px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .author-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+        .author-dot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+        }
+        .author-name {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.55);
+        }
+        .card-read {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.50);
+            transition: color 0.25s;
+        }
+        .post-card:hover .card-read {
+            color: #F990E8;
+        }
+
+        /* ── Divider ── */
+        .section-divider {
+            max-width: 1200px;
+            width: 100%;
+            margin: 80px auto 48px;
+            padding: 0 48px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .section-divider span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.45);
+            white-space: nowrap;
+        }
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* ── Newsletter block ── */
+        .newsletter {
+            max-width: 1200px;
+            width: 100%;
+            margin: 80px auto 0;
+            padding: 0 48px;
+        }
+        .newsletter-inner {
+            background: linear-gradient(135deg, rgba(12,227,236,0.08), rgba(249,144,232,0.05));
+            border: 1px solid rgba(12,227,236,0.20);
+            border-radius: 12px;
+            padding: 48px 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 48px;
+        }
+        .newsletter-text h2 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            line-height: 1.15;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 0em;
+            margin-bottom: 10px;
+        }
+        .newsletter-text p {
+            font-size: 12px;
+            color: rgba(255,255,255,0.58);
+            line-height: 1.9;
+            max-width: 340px;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .newsletter-form input {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.75);
+            padding: 10px 16px;
+            border-radius: 100px;
+            outline: none;
+            width: 180px;
+            transition: border-color 0.25s;
+        }
+        .newsletter-form input::placeholder { color: rgba(255,255,255,0.45); }
+        .newsletter-form input:focus { border-color: rgba(249,144,232,0.4); }
+        .newsletter-form button {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(255,255,255,0.90);
+            color: #000;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 22px;
+            cursor: pointer;
+            transition: background 0.25s;
+            white-space: nowrap;
+        }
+        .newsletter-form button:hover { background: #F990E8; }
+
+        /* ── Footer ── */
+        footer {
+            position: relative;
+            z-index: 2;
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 80px;
+        }
+        footer span, footer a {
+            font-size: 12px;
+            color: rgba(255,255,255,0.50);
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            transition: color 0.25s;
+        }
+        footer a:hover { color: rgba(255,255,255,0.60); }
+        footer .links { display: flex; gap: 20px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            nav { padding: 20px 24px; }
+            .page-header, .filter-bar, .blog-grid, .section-divider, .newsletter { padding: 0 24px; }
+            footer { padding: 16px 24px; }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            .post-card:first-child {
+                flex-direction: column;
+            }
+            .post-card:first-child .card-image {
+                width: 100%;
+                height: 260px;
+            }
+            .post-card:first-child .card-body {
+                padding: 28px 24px 32px;
+            }
+            .newsletter-inner {
+                flex-direction: column;
+                padding: 36px 28px;
+                gap: 28px;
+            }
+            .newsletter-form {
+                flex-direction: column;
+                width: 100%;
+            }
+            .newsletter-form input { width: 100%; }
+        }
+
+        @media (max-width: 640px) {
+            .blog-grid {
+                gap: 0;
+            }
+        }
+
+        /* ── Hero Scene ── */
+        #hero-wrapper {
+            height: 285vh; /* sticky ends at 185vh: hold at 100% until 1.5vh, fade-out ends at 1.85vh */
+        }
+        #hero-scene {
+            position: sticky;
+            top: 0;
+            z-index: 10; /* below nav (z-index:50) so nav stays on top */
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        #hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/diary-previews/StockCake-Pixel_Paradise_Sunset-2039111-medium.jpg');
+            background-size: cover;
+            background-position: center bottom;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        #hero-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Plant layers — fixed to viewport, stay at edges while content scrolls */
+        .plant-layer {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 55%;
+            will-change: transform;
+            z-index: 100;
+            pointer-events: none;
+        }
+        .plant-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            mix-blend-mode: screen;
+            /* Shift green → cyan/teal, darken for evening mood.
+               Filter only affects existing image pixels — black stays black
+               and stays invisible with mix-blend-mode: screen. No seam artifacts. */
+            filter: hue-rotate(58deg) saturate(0.50) brightness(0.68) contrast(1.10);
+        }
+
+        /* Back layer: hidden for now */
+        #plant-left-back  { display: none; }
+        #plant-right-back { display: none; }
+
+        /* Front layer: starts prominently visible, JS slides them out on scroll */
+        #plant-left-front  { left: 0; transform: translateX(-15%); }
+        #plant-right-front { right: 0; transform: translateX(15%) scaleX(-1); }
+
+        /* Right image flipped to face inward */
+        #plant-right-front img { transform: scaleX(-1); }
+
+        #hero-intro-text {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            padding: 0 48px;
+            max-width: 700px;
+            pointer-events: none;
+            opacity: 0;
+        }
+        #hero-intro-text .eyebrow {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.40);
+            margin-bottom: 18px;
+        }
+        #hero-intro-text h1 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            letter-spacing: 0em;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+        #hero-intro-text p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.9;
+        }
+
+        /* Scroll hint */
+        #scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.5;
+        }
+        #scroll-hint span {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: rgba(255,255,255,0.5);
+        }
+        #scroll-hint .hint-line {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.3);
+            animation: scrollHintPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollHintPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50%       { opacity: 1;   transform: scaleY(0.5); transform-origin: top; }
+        }
+
+        /* Card pop-in */
+        .post-card {
+            opacity: 0;
+            transform: translateY(32px);
+        }
+        .post-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (max-width: 900px) {
+            #hero-intro-text { padding: 0 24px; }
+            #plant-left-back  { width: 65%; }
+            #plant-right-back { width: 65%; }
+            #plant-left-front  { width: 72%; }
+            #plant-right-front { width: 72%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background relief -->
+    <div id="bg-relief"></div>
+
+    <!-- Page shell -->
+    <div id="shell">
+
+        <nav>
+            <a href="alphabees-founder-diaries.html" class="logo">
+                <img src="assets/Alphabees_founder_diaries_Logo_white.svg" alt="Alphabees Founder Diaries" />
+            </a>
+            <div class="nav-links">
+                <a href="alphabees-founder-diaries.html#about">about</a>
+                <a href="diaries.html" class="active">diary</a>
+                <a href="toolkit.html">toolkit</a>
+            </div>
+            <div class="nav-subscribe-wrap" id="nav-subscribe-wrap">
+                <div class="subscribe-field" id="sub-field-name">
+                    <div class="subscribe-field-inner">
+                        <input type="text" placeholder="First Name..." class="subscribe-input">
+                    </div>
+                </div>
+                <div class="subscribe-field" id="sub-field-email">
+                    <div class="subscribe-field-inner" style="width:186px">
+                        <input type="email" placeholder="E-Mail..." class="subscribe-input">
+                    </div>
+                </div>
+                <button class="nav-subscribe" id="nav-subscribe-btn">
+                    <span class="sub-text">subscribe</span>
+                    <span class="sub-arrow">→</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Scene -->
+        <div id="hero-wrapper">
+        <div id="hero-scene">
+            <div id="hero-bg"></div>
+            <div id="hero-bg-overlay"></div>
+
+            <!-- Back layer (slides out slower, smaller) -->
+            <div class="plant-layer" id="plant-left-back">
+                <img src="assets/palm_scroll_animation/plant_left.webp" alt="">
+            </div>
+            <div class="plant-layer" id="plant-right-back">
+                <img src="assets/palm_scroll_animation/plant_right.webp" alt="">
+            </div>
+
+            <!-- Front layer (slides out first, larger) -->
+            <div class="plant-layer" id="plant-left-front">
+                <img src="assets/palm_scroll_animation/plant_left_front.webp" alt="">
+            </div>
+            <div class="plant-layer" id="plant-right-front">
+                <img src="assets/palm_scroll_animation/plant_right_front.webp" alt="">
+            </div>
+
+            <!-- Intro text (revealed as plants open) -->
+            <div id="hero-intro-text">
+                <p class="eyebrow">Founder Diaries</p>
+                <h1>No hidden costs.<br>It's free!</h1>
+                <p>We build software. No courses. No paywalls. This diary is how we share what we learn along the way.</p>
+            </div>
+
+            <!-- Scroll hint -->
+            <div id="scroll-hint">
+                <div class="hint-line"></div>
+                <span>scroll</span>
+            </div>
+        </div>
+        </div><!-- /hero-wrapper -->
+
+        <!-- Filter bar -->
+        <div class="filter-bar" id="filter-bar">
+            <button class="filter-btn" onclick="filterPosts('featured', this)">Featured</button>
+            <button class="filter-btn" onclick="filterPosts('recent', this)">Most Recent</button>
+            <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
+
+            <div class="filter-dropdown" id="categories-dropdown">
+                <button class="filter-btn filter-dropdown-toggle" onclick="toggleDropdown()">
+                    Categories <span class="dropdown-arrow">▾</span>
+                </button>
+                <div class="filter-dropdown-menu" id="dropdown-menu">
+                    <button class="dropdown-item" onclick="filterPosts('Statement', this)">Statement</button>
+                    <button class="dropdown-item" onclick="filterPosts('Design', this)">Design</button>
+                    <button class="dropdown-item" onclick="filterPosts('Marketing', this)">Marketing</button>
+                    <button class="dropdown-item" onclick="filterPosts('Sales', this)">Sales</button>
+                    <button class="dropdown-item" onclick="filterPosts('Operations', this)">Operations</button>
+                    <button class="dropdown-item" onclick="filterPosts('Infrastructure', this)">Infrastructure</button>
+                    <button class="dropdown-item" onclick="filterPosts('Finance', this)">Finance</button>
+                    <button class="dropdown-item" onclick="filterPosts('Mistakes', this)">Mistakes</button>
+                    <button class="dropdown-item" onclick="filterPosts('Tool Testing', this)">Tool Testing</button>
+                    <button class="dropdown-item" onclick="filterPosts('Strategy', this)">Strategy</button>
+                </div>
+            </div>
+
+            <div class="filter-search">
+                <span class="search-icon">⌕</span>
+                <input type="text" class="search-input" placeholder="Search..." oninput="searchPosts(this.value)">
+            </div>
+        </div>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid" id="blog-grid">
+
+            <!-- Welcome / Intro — Featured -->
+            <a href="#" class="post-card" data-tag="Statement">
+                <div class="card-image">
+                    <img src="assets/founder-diary-categories_small/Welcome.webp" alt="Welcome to the Founder Diaries">
+                    <div class="card-image-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <span class="featured-badge">Start here</span>
+                    <div class="card-meta">
+                        <span class="card-tag">Statement</span>
+                        <span class="meta-dot"></span>
+                        <span class="card-date">March 2026</span>
+                    </div>
+                    <h2 class="card-title">What we're actually doing here — and why we're building in public</h2>
+                    <p class="card-excerpt">Two founders. Multiple AI ventures. One shared diary. This is what the Founder Diaries are about — the real tools, real mistakes and real systems behind building AI-first companies.</p>
+                    <div class="card-footer">
+                        <div class="card-author">
+                            <div class="author-dot">
+                                <img src="assets/Marcel_Founder_Diaries.webp" alt="Marcel">
+                            </div>
+                            <span class="author-name">Marcel & Lasse</span>
+                        </div>
+                        <span class="card-read">Read →</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Dynamic diary cards — loaded from diaries/index.json -->
+
+
+
+        </div>
+
+        <!-- Newsletter -->
+        <div class="newsletter">
+            <div class="newsletter-inner">
+                <div class="newsletter-text">
+                    <h2>Get new diaries in your inbox.</h2>
+                    <p>No hype. Just raw documentation of what we build, test and learn. Straight to your inbox when we publish.</p>
+                </div>
+                <div class="newsletter-form">
+                    <input type="text" placeholder="First name..." />
+                    <input type="email" placeholder="E-mail..." />
+                    <button>Subscribe →</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="site-footer"></div>
+
+    </div>
+
+    <script>
+        // ── Plant scroll animation ─────────────────────────────────────────
+        (function() {
+            const plantLF  = document.getElementById('plant-left-front');
+            const plantRF  = document.getElementById('plant-right-front');
+            const heroBg   = document.getElementById('hero-bg');
+            const heroText = document.getElementById('hero-intro-text');
+            const hint     = document.getElementById('scroll-hint');
+
+            function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+            function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+            const START = -15;
+            const REST  = -72;
+
+            function onScroll() {
+                const s  = window.scrollY;
+                const vh = window.innerHeight;
+
+                // Phase 1 (0 → vh): palms slide out + H1 fades in + scales up
+                const p1 = easeOut(clamp(s / vh, 0, 1));
+                // Phase 2 (1.5vh → 1.85vh): H1 fades out — holds at 100% until 1.5vh
+                const p2 = easeOut(clamp((s - vh * 1.5) / (vh * 0.35), 0, 1));
+
+                // Plants slide out in phase 1, hold in phase 2
+                const xL = START + p1 * (REST - START);
+                plantLF.style.transform = `translateX(${xL}%)`;
+                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
+
+                heroBg.style.opacity = (1 - p1) * 0.75;
+
+                // H1: fade in + grow during phase 1, fade out during phase 2
+                const scale = 0.78 + p1 * 0.22; // 0.78 → 1.0
+                heroText.style.opacity   = p1 * (1 - p2);
+                heroText.style.transform = `scale(${scale})`;
+
+                hint.style.opacity = clamp(0.5 - s / 80, 0, 0.5);
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+        })();
+
+
+        // ── Blog card pop-in via IntersectionObserver ──────────────────────
+        function observeCards(cards) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const siblings = [...entry.target.parentElement.querySelectorAll('.post-card')];
+                        const idx = siblings.indexOf(entry.target) % 3;
+                        entry.target.style.transitionDelay = `${idx * 90}ms`;
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            cards.forEach(card => observer.observe(card));
+        }
+
+        // Observe hardcoded cards (welcome card) immediately
+        observeCards(document.querySelectorAll('.post-card'));
+
+        // ── Load diary cards from index.json ───────────────────────────────
+        (async function loadDiaries() {
+            try {
+                const res = await fetch('diaries/index.json');
+                if (!res.ok) return;
+                const data = await res.json();
+                const grid = document.getElementById('blog-grid');
+                const newCards = [];
+
+                data.diaries.forEach(d => {
+                    const card = document.createElement('a');
+                    card.href = d.href;
+                    card.className = 'post-card';
+                    card.setAttribute('data-tag', d.tag);
+                    card.innerHTML =
+                        '<div class="card-image">' +
+                            '<img src="' + d.image + '" alt="' + d.imageAlt + '">' +
+                            '<div class="card-image-overlay"></div>' +
+                        '</div>' +
+                        '<div class="card-body">' +
+                            '<div class="card-meta">' +
+                                '<span class="card-tag">' + d.tag + '</span>' +
+                                '<span class="meta-dot"></span>' +
+                                '<span class="card-date">' + d.date + '</span>' +
+                            '</div>' +
+                            '<h2 class="card-title">' + d.title + '</h2>' +
+                            '<p class="card-excerpt">' + d.excerpt + '</p>' +
+                            '<div class="card-footer">' +
+                                '<div class="card-author">' +
+                                    '<div class="author-dot">' +
+                                        '<img src="' + d.authorImg + '" alt="' + d.author + '">' +
+                                    '</div>' +
+                                    '<span class="author-name">' + d.author + '</span>' +
+                                '</div>' +
+                                '<span class="card-read">Read →</span>' +
+                            '</div>' +
+                        '</div>';
+                    grid.appendChild(card);
+                    newCards.push(card);
+                });
+
+                observeCards(newCards);
+            } catch(e) {
+                console.warn('Could not load diaries index:', e);
+            }
+        })();
+    </script>
+
+    <script>
+        (async function loadPartials() {
+            const footerRes = await fetch('partials/_footer.html');
+            document.getElementById('site-footer').innerHTML = await footerRes.text();
+        })();
+
+        // Subscribe expand — nav is inlined, so this runs immediately
+        document.getElementById('nav-subscribe-btn').addEventListener('click', function() {
+            document.getElementById('nav-subscribe-wrap').classList.add('expanded');
+        });
+    </script>
+
+    <script>
+        // ── Nav height CSS variable + hide-on-scroll ──────────────────────
+        (function() {
+            const nav = document.querySelector('nav');
+            // Set --nav-height so filter-bar sticky top stays correct
+            function setNavHeight() {
+                document.documentElement.style.setProperty('--nav-height', nav.getBoundingClientRect().height + 'px');
+            }
+            setNavHeight();
+            window.addEventListener('resize', setNavHeight);
+
+            // Hide on scroll down, show on scroll up
+            let lastY = 0;
+            window.addEventListener('scroll', function() {
+                const y = window.scrollY;
+                if (y > lastY && y > 120) {
+                    nav.classList.add('nav-hidden');
+                } else {
+                    nav.classList.remove('nav-hidden');
+                }
+                lastY = y;
+            }, { passive: true });
+        })();
+
+        // ── Subscribe expand ──────────────────────────────────────────────
+        function initSubscribeExpand() {
+            const btn  = document.getElementById('nav-subscribe-btn');
+            const wrap = document.getElementById('nav-subscribe-wrap');
+            if (btn && wrap) {
+                btn.addEventListener('click', () => wrap.classList.add('expanded'));
+            }
+        }
+        // Fallback: event delegation in case partials load differently
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#nav-subscribe-btn')) {
+                const wrap = document.getElementById('nav-subscribe-wrap');
+                if (wrap) wrap.classList.add('expanded');
+            }
+        });
+
+        // ── Filter bar sticky detection ────────────────────────────────────
+        (function() {
+            const bar = document.querySelector('.filter-bar');
+            function checkSticky() {
+                const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 93;
+                bar.classList.toggle('is-sticky', bar.getBoundingClientRect().top <= navH);
+            }
+            window.addEventListener('scroll', checkSticky, { passive: true });
+            checkSticky();
+        })();
+
+        // ── Dropdown toggle ───────────────────────────────────────────────
+        function toggleDropdown() {
+            const dd = document.getElementById('categories-dropdown');
+            dd.classList.toggle('open');
+        }
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('categories-dropdown');
+            if (!dd.contains(e.target)) dd.classList.remove('open');
+        });
+
+        // ── Search ────────────────────────────────────────────────────────
+        function searchPosts(query) {
+            const q = query.toLowerCase().trim();
+            document.querySelectorAll('.post-card').forEach(card => {
+                if (!q) { card.style.display = ''; return; }
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        function filterPosts(tag, btn) {
+            // Clear search input
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) searchInput.value = '';
+
+            // Update active state — top-level buttons and dropdown items separately
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.dropdown-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Close dropdown
+            document.getElementById('categories-dropdown').classList.remove('open');
+
+            const cards = document.querySelectorAll('.post-card');
+            cards.forEach((card, i) => {
+                if (tag === 'all' || tag === 'recent') {
+                    card.style.display = '';
+                } else if (tag === 'featured') {
+                    card.style.display = i === 0 ? '' : 'none';
+                } else {
+                    card.style.display = card.getAttribute('data-tag') === tag ? '' : 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

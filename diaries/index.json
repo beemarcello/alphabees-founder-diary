@@ -1,0 +1,15 @@
+{
+  "diaries": [
+    {
+      "href": "diaries/_template.html",
+      "tag": "Design",
+      "image": "assets/founder-diary-categories_small/Design_System.webp",
+      "imageAlt": "AI-driven landing page systems",
+      "date": "Mar 2026",
+      "title": "Building AI-driven landing page systems with Figma, Claude and website builders",
+      "excerpt": "How we reduced our landing page deployment time from weeks to hours using a rigid component system and AI generation.",
+      "author": "Marcel",
+      "authorImg": "assets/Marcel_Founder_Diaries.webp"
+    }
+  ]
+}

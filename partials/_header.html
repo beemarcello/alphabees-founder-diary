@@ -1,0 +1,26 @@
+<nav>
+    <a href="alphabees-founder-diaries.html" class="logo">
+        <img src="assets/Alphabees_founder_diaries_Logo_white.svg" alt="Alphabees Founder Diaries" />
+    </a>
+    <div class="nav-links">
+        <a href="alphabees-founder-diaries.html#about">about</a>
+        <a href="diaries.html">diary</a>
+        <a href="toolkit.html">toolkit</a>
+    </div>
+    <div class="nav-subscribe-wrap" id="nav-subscribe-wrap">
+        <div class="subscribe-field" id="sub-field-name">
+            <div class="subscribe-field-inner">
+                <input type="text" placeholder="First Name..." class="subscribe-input">
+            </div>
+        </div>
+        <div class="subscribe-field" id="sub-field-email">
+            <div class="subscribe-field-inner" style="width:186px">
+                <input type="email" placeholder="E-Mail..." class="subscribe-input">
+            </div>
+        </div>
+        <button class="nav-subscribe" id="nav-subscribe-btn" onclick="this.closest('.nav-subscribe-wrap').classList.add('expanded')">
+            <span class="sub-text">subscribe</span>
+            <span class="sub-arrow">→</span>
+        </button>
+    </div>
+</nav>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprint | Alphabees Founder Diaries</title>
+
+    <style>
+        @font-face {
+            font-family: 'Bigola Display';
+            src: url('fonts/bigola-display-font/bigola-display-regular.otf') format('opentype');
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-Regular.ttf') format('truetype');
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Space Mono';
+            src: url('fonts/Space_Mono/SpaceMono-Bold.ttf') format('truetype');
+            font-weight: 700; font-style: normal;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            background: #000;
+            color: rgba(245, 245, 245, 0.75);
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Background relief layer ── */
+        #bg-relief {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url('assets/Paradise_Birds.jpg');
+            background-size: cover;
+            background-position: center;
+            /* High contrast + near-zero brightness → only structural edges survive */
+            filter: grayscale(100%) contrast(420%) brightness(0.055);
+        }
+
+        /* ── Mouse-trail canvas ── */
+        #mouse-trail {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            /* Screen blend: wherever canvas is light, underlying texture becomes more visible */
+            mix-blend-mode: screen;
+        }
+
+        /* ── Page shell ── */
+        #shell {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Nav (loaded via partial) ── */
+        #site-header nav {
+            position: sticky; top: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 28px 48px;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.35s ease;
+        }
+        #site-header nav.nav-hidden { transform: translateY(-100%); }
+        #site-header .logo img { height: 28px; display: block; }
+        #site-header .nav-links { display: flex; gap: 32px; }
+        #site-header .nav-links a {
+            font-family: 'Space Mono', monospace; font-size: 12px;
+            color: rgba(255,255,255,0.72); text-decoration: none;
+            transition: color 0.2s;
+        }
+        #site-header .nav-links a:hover { color: rgba(255,255,255,0.95); }
+        #site-header .nav-subscribe-wrap { display: flex; align-items: center; gap: 0; }
+        #site-header .subscribe-field { overflow: hidden; max-width: 0; transition: max-width 1100ms cubic-bezier(0.4,0,0.2,1); }
+        #site-header .subscribe-field:nth-child(2) { transition-duration: 900ms; transition-delay: 180ms; }
+        #site-header .nav-subscribe-wrap.expanded .subscribe-field:nth-child(1) { max-width: 158px; }
+        #site-header .nav-subscribe-wrap.expanded .subscribe-field:nth-child(2) { max-width: 200px; }
+        #site-header .subscribe-field-inner { padding-right: 8px; }
+        #site-header .subscribe-input {
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.90); padding: 8px 14px; border-radius: 100px;
+            outline: none; width: 100%;
+        }
+        #site-header .nav-subscribe {
+            font-family: 'Space Mono', monospace; font-size: 12px;
+            color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.20);
+            border: none; border-radius: 100px; padding: 8px 20px;
+            cursor: pointer; white-space: nowrap; position: relative;
+            transition: padding 600ms cubic-bezier(0.4,0,0.2,1), background-color 300ms, color 300ms;
+        }
+        #site-header .nav-subscribe:hover { background: #fff; color: #000; }
+        #site-header .sub-text { transition: opacity 0.3s; }
+        #site-header .sub-arrow { opacity: 0; position: absolute; transition: opacity 0.3s 0.5s; }
+        #site-header .nav-subscribe-wrap.expanded .nav-subscribe { padding: 8px 16px; }
+        #site-header .nav-subscribe-wrap.expanded .sub-text { opacity: 0; }
+        #site-header .nav-subscribe-wrap.expanded .sub-arrow { opacity: 1; }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            max-width: 680px;
+            width: 100%;
+            margin: 80px auto 100px;
+            padding: 0 48px;
+        }
+
+        h1 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            letter-spacing: -0.02em;
+            color: rgba(255,255,255,0.88);
+            line-height: 1.05;
+            margin-bottom: 56px;
+        }
+
+        .block {
+            margin-bottom: 44px;
+        }
+        .block h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.28);
+            margin-bottom: 10px;
+        }
+        .block p, .block address {
+            font-style: normal;
+            color: rgba(255,255,255,0.55);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+        .block a {
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            transition: color 0.25s, border-color 0.25s;
+        }
+        .block a:hover {
+            color: rgba(255,255,255,0.8);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin: 44px 0;
+        }
+
+        .disclaimer {
+            color: rgba(255,255,255,0.28);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        /* ── Footer (loaded via partial) ── */
+        #site-footer footer {
+            position: relative; z-index: 2;
+            background: #000; border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 20px 48px; display: flex;
+            justify-content: space-between; align-items: center; margin-top: 80px;
+        }
+        #site-footer footer span, #site-footer footer a {
+            font-size: 12px; color: rgba(255,255,255,0.50);
+            text-decoration: none; transition: color 0.25s;
+        }
+        #site-footer footer a:hover { color: rgba(255,255,255,0.80); }
+        #site-footer footer .links { display: flex; gap: 24px; }
+    </style>
+</head>
+<body>
+
+    <!-- Background relief -->
+    <div id="bg-relief"></div>
+
+    <!-- Mouse trail canvas -->
+    <canvas id="mouse-trail"></canvas>
+
+    <div id="site-header"></div>
+
+    <!-- Page shell -->
+    <div id="shell">
+
+        <main>
+            <h1>Imprint.</h1>
+
+            <div class="block">
+                <h2>Information according to § 5 TMG</h2>
+                <address>
+                    Alphabees GmbH<br>
+                    [Street & Number]<br>
+                    [Postal Code] [City]<br>
+                    Germany
+                </address>
+            </div>
+
+            <div class="block">
+                <h2>Represented by</h2>
+                <p>Marcel [Last Name], Managing Director<br>
+                Lasse [Last Name], Managing Director</p>
+            </div>
+
+            <div class="block">
+                <h2>Contact</h2>
+                <p>
+                    E-Mail: <a href="mailto:hello@alphabees.com">hello@alphabees.com</a>
+                </p>
+            </div>
+
+            <div class="block">
+                <h2>Commercial Register</h2>
+                <p>
+                    Registered at: Amtsgericht [City]<br>
+                    Registration number: HRB [XXXXX]
+                </p>
+            </div>
+
+            <div class="block">
+                <h2>VAT Identification Number</h2>
+                <p>
+                    VAT ID pursuant to § 27a UStG:<br>
+                    DE [XXXXXXXXX]
+                </p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="block">
+                <h2>Responsible for content pursuant to § 55 (2) RStV</h2>
+                <p>
+                    Marcel [Last Name] &amp; Lasse [Last Name]<br>
+                    [Street &amp; Number]<br>
+                    [Postal Code] [City]
+                </p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="block">
+                <h2>Liability for content</h2>
+                <p class="disclaimer">
+                    As a service provider we are responsible for our own content on these pages under general law pursuant to § 7 (1) TMG. According to §§ 8 to 10 TMG, however, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information in accordance with general law remain unaffected. Any liability in this regard is, however, only possible from the time of knowledge of a specific legal violation. Upon becoming aware of such legal violations, we will remove this content immediately.
+                </p>
+            </div>
+
+            <div class="block">
+                <h2>Liability for links</h2>
+                <p class="disclaimer">
+                    Our offer contains links to external third-party websites over whose content we have no influence. We therefore cannot assume any liability for this external content. The respective provider or operator of the linked pages is always responsible for their content. The linked pages were checked for possible legal violations at the time of linking. Illegal content was not recognisable at the time of linking. Permanent monitoring of the content of the linked pages is, however, not reasonable without concrete evidence of an infringement. Upon becoming aware of legal violations, we will remove such links immediately.
+                </p>
+            </div>
+
+            <div class="block">
+                <h2>Copyright</h2>
+                <p class="disclaimer">
+                    The content and works on these pages created by the site operators are subject to German copyright law. Duplication, processing, distribution, and any form of commercialisation of such material beyond the scope of the copyright law require the written consent of the respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use.
+                </p>
+            </div>
+
+        </main>
+
+    </div>
+
+    <div id="site-footer"></div>
+
+    <script>
+        // Load partials
+        (async function() {
+            const [headerRes, footerRes] = await Promise.all([
+                fetch('partials/_header.html'),
+                fetch('partials/_footer.html')
+            ]);
+            document.getElementById('site-header').innerHTML = await headerRes.text();
+            document.getElementById('site-footer').innerHTML = await footerRes.text();
+        })();
+
+        // Nav height + hide on scroll + subscribe expand
+        const headerObserver = new MutationObserver(function() {
+            const nav = document.querySelector('#site-header nav');
+            if (!nav) return;
+            headerObserver.disconnect();
+            function setNavHeight() {
+                document.documentElement.style.setProperty('--nav-height', nav.getBoundingClientRect().height + 'px');
+            }
+            setNavHeight();
+            window.addEventListener('resize', setNavHeight);
+            let lastY = 0;
+            window.addEventListener('scroll', function() {
+                const y = window.scrollY;
+                nav.classList.toggle('nav-hidden', y > lastY && y > 120);
+                lastY = y;
+            }, { passive: true });
+            const btn = nav.querySelector('#nav-subscribe-btn');
+            const wrap = nav.querySelector('#nav-subscribe-wrap');
+            if (btn && wrap) btn.addEventListener('click', function() { wrap.classList.add('expanded'); });
+        });
+        headerObserver.observe(document.getElementById('site-header'), { childList: true, subtree: true });
+    </script>
+
+    <script>
+        // ── Mouse trail ──────────────────────────────────────────────────
+        const canvas = document.getElementById('mouse-trail');
+        const ctx    = canvas.getContext('2d');
+        const trail  = [];
+        const MAX_AGE   = 1400; // ms a point lives
+        const MAX_TRAIL = 100;  // max stored points
+
+        function resize() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', (e) => {
+            trail.push({ x: e.clientX, y: e.clientY, t: Date.now() });
+            if (trail.length > MAX_TRAIL) trail.shift();
+        });
+
+        function render() {
+            const now = Date.now();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Prune expired points
+            while (trail.length && now - trail[0].t > MAX_AGE) trail.shift();
+
+            for (let i = 0; i < trail.length; i++) {
+                const p   = trail[i];
+                const age = now - p.t;
+                const frac = 1 - age / MAX_AGE;          // 1 = fresh, 0 = expired
+
+                // Gradient: diffuse rather than sharp spotlight
+                const r = 160 + (1 - frac) * 60;         // radius grows slightly as it fades
+                const peak = frac * 0.13;                 // max opacity at center (subtle, not a torch)
+
+                const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+                grad.addColorStop(0,   `rgba(255,255,255,${peak})`);
+                grad.addColorStop(0.3, `rgba(255,255,255,${peak * 0.55})`);
+                grad.addColorStop(0.7, `rgba(255,255,255,${peak * 0.15})`);
+                grad.addColorStop(1,   'rgba(255,255,255,0)');
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            requestAnimationFrame(render);
+        }
+        render();
+    </script>
+
+</body>
+</html>
