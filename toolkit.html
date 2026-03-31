@@ -607,6 +607,24 @@
                     wrap.classList.add('expanded');
                 });
             }
+
+            // Mobile hamburger
+            const hamburger = document.getElementById('mobile-menu-btn');
+            const overlay = document.getElementById('mobile-nav-overlay');
+            if (hamburger && overlay) {
+                hamburger.addEventListener('click', function() {
+                    const isOpen = hamburger.classList.toggle('open');
+                    overlay.classList.toggle('open', isOpen);
+                    document.body.style.overflow = isOpen ? 'hidden' : '';
+                });
+                overlay.querySelectorAll('a').forEach(function(a) {
+                    a.addEventListener('click', function() {
+                        hamburger.classList.remove('open');
+                        overlay.classList.remove('open');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
         });
         headerObserver.observe(document.getElementById('site-header'), { childList: true, subtree: true });
     </script>
