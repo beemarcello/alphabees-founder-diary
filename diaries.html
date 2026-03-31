@@ -1417,7 +1417,7 @@
         // ── Load diary cards from index.json ───────────────────────────────
         (async function loadDiaries() {
             try {
-                const res = await fetch('diaries/index.json');
+                const res = await fetch('diary/index.json');
                 if (!res.ok) return;
                 const data = await res.json();
                 const grid = document.getElementById('blog-grid');

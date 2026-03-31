@@ -1,7 +1,7 @@
 {
   "diaries": [
     {
-      "href": "diaries/_template.html",
+      "href": "diary/_template.html",
       "tag": "Design",
       "image": "assets/founder-diary-categories_small/Design_System.webp",
       "imageAlt": "AI-driven landing page systems",

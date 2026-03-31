@@ -98,7 +98,7 @@
     line-height: 1.15;
 }
 ```
-Verwendet auf: `diaries.html`, `diaries/_template.html`, `toolkit.html`
+Verwendet auf: `diaries.html`, `diary/_template.html`, `toolkit.html`
 
 ### Sidebar CTA (diary artikel)
 ```css

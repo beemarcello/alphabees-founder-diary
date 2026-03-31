@@ -17,7 +17,7 @@ alphabees-founder-diary/           # GitHub Repo Root
 │   ├── _header.html               # Nav — wird via fetch geladen (NICHT von diaries.html — dort inline)
 │   ├── _footer.html               # Footer — wird via fetch geladen von allen Seiten
 │   └── _sidebar.html             # Sidebar — wird via fetch geladen von _template-auto.html
-├── diaries/                       # Einzelne Diary-Artikel
+├── diary/                       # Einzelne Diary-Artikel
 │   ├── index.json                 # Artikel-Index — wird von diaries.html dynamisch geladen
 │   ├── _template.html             # Standalone Template (Nav + Sidebar inline, Footer via fetch)
 │   └── _template-auto.html       # Automation Template (Nav + Sidebar + Footer alle via fetch)
@@ -58,7 +58,7 @@ alphabees-founder-diary/           # GitHub Repo Root
 - **Landing Page** (`index.html`): React (via CDN Babel), Tailwind CSS
 - **Alle anderen Seiten**: Vanilla HTML/CSS/JS, keine externen Frameworks
 - **Fonts**: Lokal eingebunden via `@font-face` auf allen Seiten — kein CDN (CDN wird auf Mobile blockiert)
-- **Partials**: Werden via `fetch('partials/_*.html')` geladen (bzw. `fetch('../partials/_*.html')` aus `diaries/`)
+- **Partials**: Werden via `fetch diary/`)
 - **Header auf diaries.html**: Direkt inlined (NICHT via Partial) — so funktioniert die Subscribe-Animation zuverlässig
 - **Nav auf Seiten mit Partial-Header**: MutationObserver erkennt wenn Nav ins DOM geladen wurde, dann `--nav-height` setzen + Scroll-Handler + Subscribe-Animation + Hamburger-Wiring
 
@@ -164,7 +164,7 @@ const headerObserver = new MutationObserver(function() {
 headerObserver.observe(document.getElementById('site-header'), { childList: true, subtree: true });
 ```
 
-### Diary Artikel Template (diaries/_template.html)
+### Diary Artikel Template (diary/_template.html)
 - Standalone HTML, Nav direkt inlined (gleich wie diaries.html)
 - Asset-Pfade mit `../` Prefix (eine Ebene höher)
 - Zwei-Spalten Layout: Artikel (1fr) + Sidebar (260px sticky)
@@ -173,15 +173,15 @@ headerObserver.observe(document.getElementById('site-header'), { childList: true
 - Kein Breadcrumb (bewusst weggelassen)
 - Content-Blöcke: intro, h2, h3, blockquote, tool-card, steps, takeaways, highlight-box, outlook, tags, FAQ accordion
 
-### Diary Artikel Template Auto (diaries/_template-auto.html)
+### Diary Artikel Template Auto (diary/_template-auto.html)
 - Alle Partials via fetch: `../partials/_header.html`, `../partials/_sidebar.html`, `../partials/_footer.html`
 - Placeholder-Tokens: `<!-- TITLE -->`, `<!-- CATEGORY -->`, `<!-- DATE -->`, `<!-- READTIME -->`, `<!-- SUBTITLE -->`, `<!-- INTRO -->`, `<!-- HERO_IMAGE -->`, `<!-- META_DESCRIPTION -->`
 - MutationObserver für Nav-Höhe (da Nav async geladen wird)
 - Wird von der Make.com Automation befüllt — Python Script ersetzt alle Tokens und injiziert Artikel-HTML
 
-### Dynamisches Diary-Listing (diaries.html + diaries/index.json)
-- `diaries.html` lädt Artikel-Karten dynamisch via `fetch('diaries/index.json')`
-- `diaries/index.json` ist die einzige Quelle für alle publizierten Artikel
+### Dynamisches Diary-Listing (diaries.html + diary/index.json)
+- `diaries.html` lädt Artikel-Karten dynamisch via `fetch('diary/index.json')`
+- `diary/index.json` ist die einzige Quelle für alle publizierten Artikel
 - Neueste Artikel stehen zuerst im Array (werden per prepend eingefügt)
 - Welcome-Karte bleibt hardcoded in diaries.html (statischer Intro-Post)
 - IntersectionObserver läuft für hardcoded + dynamische Karten getrennt via `observeCards()`
@@ -205,7 +205,7 @@ headerObserver.observe(document.getElementById('site-header'), { childList: true
 }
 .newsletter-text h2 { line-height: 1.15; }
 ```
-Verwendet auf: `diaries.html`, `diaries/_template.html`, `toolkit.html`
+Verwendet auf: `diaries.html`, `diary/_template.html`, `toolkit.html`
 
 ## Ausstehende Aufgaben
 
