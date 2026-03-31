@@ -1,11 +1,854 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=alphabees-founder-diaries.html">
-  <link rel="canonical" href="alphabees-founder-diaries.html">
+<html lang="en" class="scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabees | Founder Diaries</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin=""></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin=""></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/bigola-display');
+
+        /* Hide scrollbar for horizontal track */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Subtle noise texture */
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0; }
+        }
+        .typewriter-cursor {
+            display: inline-block;
+            animation: cursorBlink 530ms step-end infinite;
+            margin-left: 1px;
+        }
+
+        @keyframes arrowTip {
+            0%   { transform: translateY(0); }
+            30%  { transform: translateY(10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .arrow-tip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            will-change: transform;
+            animation: arrowTip 1500ms ease-in-out infinite;
+        }
+
+        /* Nav pill text roll-up/roll-in hover effect */
+        .nav-roll {
+            display: inline-flex;
+            align-items: center;
+            height: 1.25em;
+            overflow: hidden;
+            position: relative;
+        }
+        .nav-roll__inner {
+            position: relative;
+            display: inline-block;
+            height: 1.25em;
+        }
+        .nav-roll__front,
+        .nav-roll__back {
+            display: block;
+            letter-spacing: 0.02em;
+            will-change: transform;
+            line-height: 1.25em;
+        }
+        .nav-roll__back {
+            position: absolute !important;
+            left: 0;
+            top: 0;
+            color: #0CE3EC;
+            transform: translateY(160%);
+            pointer-events: none;
+        }
+        .nav-roll .nav-roll__front {
+            transition: transform 1100ms cubic-bezier(0.12, 0.8, 0.2, 1);
+        }
+        .nav-roll .nav-roll__back {
+            transition: transform 900ms cubic-bezier(0.2, 1.1, 0.2, 1);
+        }
+        .nav-roll:hover .nav-roll__front,
+        .nav-roll:focus-visible .nav-roll__front {
+            transform: translateY(-160%);
+            transition-timing-function: cubic-bezier(0.08, 0.92, 0.2, 1.12);
+        }
+        .nav-roll:hover .nav-roll__back,
+        .nav-roll:focus-visible .nav-roll__back {
+            transform: translateY(0%);
+        }
+
+        /* Allow buttons to trigger the roll effect */
+        .nav-roll-trigger:hover .nav-roll__front,
+        .nav-roll-trigger:focus-visible .nav-roll__front {
+            transform: translateY(-160%);
+            transition-timing-function: cubic-bezier(0.08, 0.92, 0.2, 1.12);
+        }
+        .nav-roll-trigger:hover .nav-roll__back,
+        .nav-roll-trigger:focus-visible .nav-roll__back {
+            transform: translateY(0%);
+        }
+        .nav-roll-trigger .nav-roll__back {
+            color: #000;
+        }
+        .nav-roll-trigger:hover .nav-roll__front,
+        .nav-roll-trigger:focus-visible .nav-roll__front {
+            color: #000;
+        }
+
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Mono', 'monospace'],
+                        serif: ['Bigola Display', 'serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        glass: 'rgba(217, 217, 217, 0.1)',
+                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                        offWhite: '#F5F5F5',
+                        warmMuted: '#A89F91'
+                    },
+                    letterSpacing: {
+                        tight: '-0.02em',
+                        tighter: '-0.04em',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-  <script>window.location.replace("alphabees-founder-diaries.html");</script>
-</body>
-</html>
+<body class="bg-[#050505] text-offWhite font-mono antialiased selection:bg-white/20"><div class="fixed top-0 w-full h-screen -z-10 bg-cover bg-center" style="background-image: url(&quot;https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/dfbb81e3-d861-4c4d-abdd-3e14fe5cde8f_3840w.webp&quot;);; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)" data-alpha-mask="80"></div>
+
+    <!-- Background (image) added by Aura -->
+    
+
+    <div id="root" class=""><div class="relative min-h-screen"><div class="fixed inset-0 z-0"><img src="https://images.unsplash.com/photo-1572338166945-81498144b248?q=80&amp;w=2532&amp;auto=format&amp;fit=crop" alt="" class="w-full h-full object-cover filter saturate-100 contrast-110"><div class="absolute inset-0 bg-[#1a120b] transition-opacity duration-300 ease-out"></div><div class="absolute inset-0 bg-noise"></div></div><header class="fixed top-0 inset-x-0 z-50 transition-all duration-700 py-4"><div class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-start"><div class="flex flex-col group cursor-pointer"><span class="font-serif text-2xl tracking-tight leading-none text-white transition-opacity">Alphabees</span><span class="text-xs text-white/50 italic mt-1 group-hover:text-white/80 transition-colors">founder diaries</span></div><div class="hidden md:flex items-center gap-12 bg-black/20 backdrop-blur-md px-8 py-3 rounded-full border border-white/5"><a href="#about" class="text-sm text-white/70 transition-colors nav-roll"><span class="nav-roll__inner"><span class="nav-roll__front">about</span><span class="nav-roll__back">about</span></span></a><a href="diaries.html" class="text-sm text-white/70 transition-colors nav-roll"><span class="nav-roll__inner"><span class="nav-roll__front">diary</span><span class="nav-roll__back">diary</span></span></a><a href="#toolkit" class="text-sm text-white/70 transition-colors nav-roll"><span class="nav-roll__inner"><span class="nav-roll__front">toolkit</span><span class="nav-roll__back">toolkit</span></span></a></div><button class="hidden md:block px-6 py-2.5 border border-white/20 rounded-full text-sm hover:bg-white hover:text-black transition-all duration-300 nav-roll-trigger"><span class="nav-roll"><span class="nav-roll__inner"><span class="nav-roll__front">subscribe</span><span class="nav-roll__back">subscribe</span></span></span></button></div></header><main><section class="relative h-screen flex flex-col items-center justify-center px-6 text-center"><div class="max-w-5xl mx-auto mt-20"><h1 class="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight text-white leading-[1.1] mb-12 drop-shadow-2xl">Become a Swiss knife<br>in AI-First Venture Building.</h1><div class="flex items-center justify-center bg-glass backdrop-blur-md rounded-full px-8 md:px-16 py-4 border border-glassBorder shadow-2xl w-full max-w-2xl mx-auto"><p class="text-sm md:text-base text-white/90">Two serial founders building and documenting<br class="hidden md:block"> AI ventures in public.</p></div></div><div class="absolute bottom-12 flex flex-col items-center gap-4 opacity-60 animate-pulse"><span class="text-xs tracking-widest uppercase">join the ride</span><span class="arrow-tip"><iconify-icon icon="solar:arrow-down-linear" stroke-width="1.5" class="text-xl"></iconify-icon></span></div></section><section class="md:h-[375vh] relative z-10" id="about"><div class="md:sticky md:top-0 md:h-screen w-full overflow-hidden flex flex-col md:flex-row items-center"><div class="flex flex-col md:flex-row h-full w-full md:w-max will-change-transform ease-out duration-75"><div class="w-full md:w-screen h-screen shrink-0 flex items-center justify-center px-6 md:px-24"><div class="max-w-2xl"><h2 class="font-serif text-4xl md:text-6xl tracking-tight mb-8">Two founders.<br>Many AI agents.</h2><p class="text-base md:text-lg text-white/70 leading-relaxed">This Founder Diary follows how two serial founders build AI-first ventures with a tiny human team and a growing system of AI agents, automations and internal tools.</p></div></div><div class="w-full md:w-[80vw] h-screen shrink-0 flex items-center justify-center px-6 md:px-24"><div class="flex flex-col md:flex-row md:items-center gap-12 w-full"><div class="w-full aspect-square md:h-64 md:w-64 shrink-0 rounded-2xl overflow-hidden relative"><div class="bg-black/20 z-10 absolute top-0 right-0 bottom-0 left-0"></div><img src="assets/Marcel_Founder_Diaries.webp" alt="Marcel" class="w-full h-full object-cover filter sepia-[0.3] contrast-125"></div><div class="w-full md:w-1/2 max-w-xl"><h3 class="uppercase text-warmMuted text-xs tracking-widest mb-4">Marcel</h3><h2 class="md:text-5xl text-3xl tracking-tight font-serif mb-6">AI-Driven Design &amp;<br>Marketing Workflows</h2><p class="md:text-base leading-relaxed text-sm text-white/70">Hi, I'm Marcel, co-founder of Alphabees. In this Founder Diary I document how I build AI-driven design, marketing and sales workflows. I experiment with different tool combinations to create automation systems that save time and allow us to run multiple brands under one roof.</p></div></div></div><div class="w-full md:w-[80vw] h-screen shrink-0 flex items-center justify-center px-6 md:px-24"><div class="flex flex-col md:flex-row md:items-center gap-12 w-full"><div class="w-full aspect-square md:h-64 md:w-64 shrink-0 rounded-2xl overflow-hidden relative"><div class="absolute inset-0 bg-black/20 z-10"></div><img src="assets/Lasse_Founder_Diaries.webp" alt="Lasse" class="w-full h-full object-cover filter sepia-[0.3] contrast-125"></div><div class="w-full md:w-1/2 max-w-xl"><h3 class="text-xs uppercase tracking-widest text-warmMuted mb-4">Lasse</h3><h2 class="font-serif text-3xl md:text-5xl tracking-tight mb-6">AI-First Software,<br>Operations &amp; Finance</h2><p class="text-sm md:text-base text-white/70 leading-relaxed">Hi, I'm Lasse, co-founder of Alphabees. In this Founder Diary I document how I build AI-first systems for software development, server operations, finance and taxes. I experiment with architectures, automations and internal systems that help us run our ventures with as little manual work as possible.</p></div></div></div></div></div></section><section class="py-32 px-6 border-t border-white/5 relative z-10 bg-black/40 backdrop-blur-sm"><div class="max-w-3xl mx-auto text-center"><h2 class="font-serif text-4xl md:text-6xl tracking-tight mb-8">We make mistakes<br>so you don't have to.</h2><p class="text-base md:text-lg text-white/70 leading-relaxed">Most startup stories show the wins. We document the real process of building AI-first ventures. The tools, systems and mistakes behind it. So other founders can learn faster.</p></div></section><section id="diary" class="py-32 px-6 relative z-10 bg-black/95"><div class="max-w-7xl mx-auto"><div class="flex justify-between items-end mb-16 border-b border-white/10 pb-8"><h2 class="font-serif text-4xl md:text-5xl tracking-tight">Latest Diaries</h2><a href="#" class="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">view archive <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div><div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16"><article class="group cursor-pointer"><div class="mb-4 flex items-center gap-4"><span class="text-xs tracking-widest uppercase text-warmMuted">Architecture</span><div class="h-px bg-white/10 flex-grow group-hover:bg-white/30 transition-colors"></div></div><h3 class="font-serif text-2xl md:text-3xl tracking-tight mb-4 group-hover:text-[#F990E8] transition-colors leading-snug">Building AI-driven landing page systems with Figma, Claude and website builders</h3><p class="text-sm text-white/60 leading-relaxed">How we reduced our landing page deployment time from weeks to hours using a rigid component system and AI generation.</p></article><article class="group cursor-pointer"><div class="mb-4 flex items-center gap-4"><span class="text-xs tracking-widest uppercase text-warmMuted">Operations</span><div class="h-px bg-white/10 flex-grow group-hover:bg-white/30 transition-colors"></div></div><h3 class="font-serif text-2xl md:text-3xl tracking-tight mb-4 group-hover:text-[#F990E8] transition-colors leading-snug">Automating internal workflows across multiple brands</h3><p class="text-sm text-white/60 leading-relaxed">The exact Zapier and Make architectures we use to route customer data, support tickets, and sales alerts without human touch.</p></article><article class="group cursor-pointer"><div class="mb-4 flex items-center gap-4"><span class="text-xs tracking-widest uppercase text-warmMuted">Infrastructure</span><div class="h-px bg-white/10 flex-grow group-hover:bg-white/30 transition-colors"></div></div><h3 class="font-serif text-2xl md:text-3xl tracking-tight mb-4 group-hover:text-[#F990E8] transition-colors leading-snug">Server and operations lessons from building AI-first ventures</h3><p class="text-sm text-white/60 leading-relaxed">Why we abandoned complex cloud setups for simple VPS hosting, and how we handle scaling when AI features go viral.</p></article><article class="group cursor-pointer"><div class="mb-4 flex items-center gap-4"><span class="text-xs tracking-widest uppercase text-warmMuted">Mistakes</span><div class="h-px bg-white/10 flex-grow group-hover:bg-white/30 transition-colors"></div></div><h3 class="font-serif text-2xl md:text-3xl tracking-tight mb-4 group-hover:text-[#F990E8] transition-colors leading-snug">Mistakes in early AI tool stack decisions</h3><p class="text-sm text-white/60 leading-relaxed">We spent $2,000 on the wrong vector database setup. Here is why we switched, and what you should use instead.</p></article></div></div></section><section class="py-40 px-6 relative z-10 bg-black flex items-center justify-center text-center"><div class="max-w-2xl"><h2 class="font-serif text-5xl md:text-6xl tracking-tight mb-6">Follow the journey.</h2><p class="text-base text-white/60 mb-12">We publish regular Founder Diary entries documenting what we build, test and learn along the way. No hype. Just real venture building.</p><button class="px-8 py-4 bg-white text-black rounded-full font-semibold text-sm hover:bg-[#0CE3EC] hover:scale-105 transition-all duration-300 nav-roll-trigger"><span class="nav-roll"><span class="nav-roll__inner"><span class="nav-roll__front">Subscribe</span><span class="nav-roll__back">Subscribe</span></span></span></button></div></section></main></div></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Components ---
+
+        const Nav = ({ scrollProgress }) => {
+            const isScrolled = scrollProgress > 0.05;
+            const [expanded, setExpanded] = React.useState(false);
+
+            return (
+                <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ${isScrolled ? 'py-4' : 'py-8'}`}>
+                    <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+                        <div className="group cursor-pointer">
+                            <img src="assets/Alphabees_founder_diaries_Logo_white.svg" alt="Alphabees Founder Diaries" className="h-10 transition-opacity group-hover:opacity-80" />
+                        </div>
+
+                        <div className="hidden md:flex items-center gap-12 bg-black/20 backdrop-blur-md px-8 py-3 rounded-full border border-white/5">
+                            <a href="#about" className="text-sm text-white/70 transition-colors nav-roll">
+                                <span className="nav-roll__inner">
+                                    <span className="nav-roll__front">about</span>
+                                    <span className="nav-roll__back">about</span>
+                                </span>
+                            </a>
+                            <a href="diaries.html" className="text-sm text-white/70 transition-colors nav-roll">
+                                <span className="nav-roll__inner">
+                                    <span className="nav-roll__front">diary</span>
+                                    <span className="nav-roll__back">diary</span>
+                                </span>
+                            </a>
+                            <a href="toolkit.html" className="text-sm text-white/70 transition-colors nav-roll">
+                                <span className="nav-roll__inner">
+                                    <span className="nav-roll__front">toolkit</span>
+                                    <span className="nav-roll__back">toolkit</span>
+                                </span>
+                            </a>
+                        </div>
+
+                        {/* Subscribe with expanding input fields */}
+                        <div className="hidden md:flex items-center">
+
+                            {/* First Name — 1100ms */}
+                            <div style={{
+                                width: expanded ? '158px' : '0px',
+                                opacity: expanded ? 1 : 0,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                transition: 'width 1100ms cubic-bezier(0.4, 0, 0.2, 1), opacity 450ms ease',
+                            }}>
+                                <div style={{ paddingRight: '10px' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="First Name..."
+                                        className="w-full px-4 py-2.5 rounded-full bg-white/5 border border-white/20 text-white text-sm font-mono placeholder:text-white/35 focus:outline-none focus:border-[#0CE3EC]/60 transition-colors duration-300"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* E-Mail — 900ms */}
+                            <div style={{
+                                width: expanded ? '196px' : '0px',
+                                opacity: expanded ? 1 : 0,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                transition: 'width 900ms cubic-bezier(0.4, 0, 0.2, 1) 180ms, opacity 450ms ease 180ms',
+                            }}>
+                                <div style={{ paddingRight: '10px' }}>
+                                    <input
+                                        type="email"
+                                        placeholder="E-Mail..."
+                                        className="w-full px-4 py-2.5 rounded-full bg-white/5 border border-white/20 text-white text-sm font-mono placeholder:text-white/35 focus:outline-none focus:border-[#0CE3EC]/60 transition-colors duration-300"
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setExpanded(true)}
+                                className="border border-white/20 rounded-full text-sm hover:bg-white hover:text-black transition-all duration-300 nav-roll-trigger shrink-0 overflow-hidden"
+                                style={{
+                                    padding: expanded ? '10px 16px' : '10px 24px',
+                                    transition: 'padding 600ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms, color 300ms',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                <span style={{
+                                    display: 'inline-block',
+                                    transition: 'opacity 300ms ease, transform 300ms ease',
+                                    opacity: expanded ? 0 : 1,
+                                    transform: expanded ? 'scale(0.6)' : 'scale(1)',
+                                    position: expanded ? 'absolute' : 'relative',
+                                }}>
+                                    <span className="nav-roll">
+                                        <span className="nav-roll__inner">
+                                            <span className="nav-roll__front">subscribe</span>
+                                            <span className="nav-roll__back">subscribe</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span style={{
+                                    display: 'inline-block',
+                                    transition: 'opacity 300ms ease 500ms, transform 300ms ease 500ms',
+                                    opacity: expanded ? 1 : 0,
+                                    transform: expanded ? 'translateX(0)' : 'translateX(-8px)',
+                                    position: expanded ? 'relative' : 'absolute',
+                                }}>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+            );
+        };
+
+        const TypewriterText = () => {
+            const text = "Two serial founders building and documenting AI ventures in public.";
+            const [displayed, setDisplayed] = React.useState('');
+            const [done, setDone] = React.useState(false);
+            const indexRef = React.useRef(0);
+
+            React.useEffect(() => {
+                // Start after heroFadeIn animation completes (1.2s + 200ms delay + buffer)
+                const startDelay = setTimeout(() => {
+                    const type = () => {
+                        if (indexRef.current >= text.length) {
+                            setDone(true);
+                            return;
+                        }
+                        const i = indexRef.current;
+                        const prevChar = i > 0 ? text[i - 1] : '';
+
+                        // Base: 65–115ms per character
+                        let delay = 65 + Math.random() * 50;
+
+                        // Pause after spaces (between words)
+                        if (prevChar === ' ') delay += 20 + Math.random() * 55;
+
+                        // Longer pause after period
+                        if (prevChar === '.') delay += 280 + Math.random() * 220;
+
+                        // Comma pause
+                        if (prevChar === ',') delay += 90 + Math.random() * 80;
+
+                        // Burst of fast typing (20% chance — simulates confident stretches)
+                        if (Math.random() < 0.20) delay = 28 + Math.random() * 22;
+
+                        // Rare hesitation (4% chance)
+                        if (Math.random() < 0.04) delay += 380 + Math.random() * 280;
+
+                        setTimeout(() => {
+                            indexRef.current += 1;
+                            setDisplayed(text.slice(0, indexRef.current));
+                            type();
+                        }, delay);
+                    };
+                    type();
+                }, 1500);
+
+                return () => clearTimeout(startDelay);
+            }, []);
+
+            return (
+                <div className="text-center">
+                    <span style={{
+                        display: 'inline',
+                        backgroundColor: '#F990E8',
+                        color: '#000',
+                        padding: '4px 10px',
+                        lineHeight: '2.4',
+                        boxDecorationBreak: 'clone',
+                        WebkitBoxDecorationBreak: 'clone',
+                        fontFamily: 'Space Mono, monospace',
+                        fontSize: '0.9rem',
+                        letterSpacing: '0.01em',
+                    }}>
+                        {displayed}
+                        {!done && <span className="typewriter-cursor">|</span>}
+                    </span>
+                </div>
+            );
+        };
+
+        const Hero = () => {
+            return (
+                <section className="relative h-screen flex flex-col items-center justify-center px-6 text-center">
+                    <div className="max-w-screen-xl mx-auto mt-20" style={{ animation: 'heroFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 200ms both' }}>
+                        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[1.1] mb-12 drop-shadow-2xl">
+                            Become a Swiss knife<br />in AI-First Venture Building.
+                        </h1>
+
+                        <TypewriterText />
+                    </div>
+
+                    <div className="absolute bottom-12 flex flex-col items-center gap-4 opacity-60 animate-pulse">
+                        <span className="text-xs tracking-widest uppercase">join the ride</span>
+                        <span className="arrow-tip"><iconify-icon icon="solar:arrow-down-linear" stroke-width="1.5" className="text-xl"></iconify-icon></span>
+                    </div>
+                </section>
+            );
+        };
+
+        const AboutHorizontalScroll = ({ onMarcelVisible }) => {
+            const containerRef = useRef(null);
+            const stickyRef = useRef(null);
+            const trackRef = useRef(null);
+            const [translateX, setTranslateX] = useState(0);
+            const [isDesktop, setIsDesktop] = useState(true);
+            const marcelFiredRef = useRef(false);
+
+            useEffect(() => {
+                const checkLayout = () => setIsDesktop(window.innerWidth >= 768);
+                checkLayout();
+                window.addEventListener('resize', checkLayout);
+                return () => window.removeEventListener('resize', checkLayout);
+            }, []);
+
+            useEffect(() => {
+                if (!isDesktop) {
+                    setTranslateX(0);
+                    return;
+                }
+
+                const handleScroll = () => {
+                    if (!containerRef.current || !trackRef.current) return;
+
+                    const { top, height } = containerRef.current.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    const maxTranslate = trackRef.current.scrollWidth - window.innerWidth;
+
+                    if (top > 0) { setTranslateX(0); return; }
+                    if (-top >= height - windowHeight) { setTranslateX(-maxTranslate); return; }
+
+                    const scrolled = -top;
+                    const totalScrollable = height - windowHeight;
+                    const pause = windowHeight;
+                    // Pause Marcel before Lasse becomes visible:
+                    // Marcel panel is 80vw wide starting at 100vw → ends at 180vw.
+                    // Stopping at -80vw keeps viewport right edge at 180vw (Lasse just hidden).
+                    const marcelPauseX = 0.8 * window.innerWidth;
+                    const marcelFrac = maxTranslate > 0 ? marcelPauseX / maxTranslate : 0.5;
+                    // 3 pauses consume 3*pause; remainder split proportionally across 2 scroll segments
+                    const totalHorizontalTime = totalScrollable - 3 * pause;
+                    const seg1Time = marcelFrac * totalHorizontalTime;       // scroll to Marcel
+                    const seg2Time = (1 - marcelFrac) * totalHorizontalTime; // scroll to Lasse
+
+                    const t0 = pause;                 // end of pause before scroll
+                    const t1 = t0 + seg1Time;         // end of seg1 (Marcel in view)
+                    const t2 = t1 + pause;            // end of pause at Marcel
+                    const t3 = t2 + seg2Time;         // end of seg2 (Lasse in view)
+                    // t3 → end: pause at Lasse
+
+                    let tx = 0;
+                    if (scrolled < t0) {
+                        tx = 0;
+                    } else if (scrolled < t1) {
+                        tx = -((scrolled - t0) / seg1Time) * marcelPauseX;
+                    } else if (scrolled < t2) {
+                        tx = -marcelPauseX;
+                    } else if (scrolled < t3) {
+                        tx = -(marcelPauseX + ((scrolled - t2) / seg2Time) * (maxTranslate - marcelPauseX));
+                    } else {
+                        tx = -maxTranslate;
+                    }
+
+                    setTranslateX(tx);
+
+                    const progress = maxTranslate > 0 ? Math.min(1, -tx / maxTranslate) : 0;
+                    if (progress >= 0.55 && !marcelFiredRef.current && onMarcelVisible) {
+                        marcelFiredRef.current = true;
+                        onMarcelVisible();
+                    }
+                };
+
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                handleScroll();
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [isDesktop]);
+
+            return (
+                <section ref={containerRef} className="md:h-[675vh] relative z-10" id="about">
+                    <div ref={stickyRef} className="md:sticky md:top-0 md:h-screen w-full overflow-hidden flex flex-col md:flex-row items-center">
+                        <div 
+                            ref={trackRef} 
+                            className="flex flex-col md:flex-row h-full w-full md:w-max will-change-transform ease-out duration-75"
+                            style={{ transform: isDesktop ? `translateX(${translateX}px)` : 'none' }}
+                        >
+                            {/* Panel 1 */}
+                            <div className="w-full md:w-screen h-screen shrink-0 flex items-center justify-center px-6 md:px-24 relative">
+                                <div className="max-w-2xl relative z-10">
+                                    <h2 className="font-serif text-4xl md:text-6xl tracking-tight mb-8">Two founders.<br/>Many AI agents.</h2>
+                                    <p className="text-base md:text-lg text-white/70 leading-relaxed">
+                                        This Founder Diary follows how two serial founders build AI-first ventures with a tiny human team and a growing system of AI agents, automations and internal tools.
+                                    </p>
+                                </div>
+                                <img
+                                    src="assets/Two Founders_new.svg"
+                                    alt=""
+                                    className="hidden md:block absolute left-1/2 -translate-x-1/2 bottom-[-55%] w-[180vw] opacity-20 pointer-events-none select-none"
+                                />
+                            </div>
+
+                            {/* Panel 2 */}
+                            <div className="w-full md:w-[80vw] h-screen shrink-0 flex items-center justify-center px-6 md:px-24">
+                                <div className="flex flex-col md:flex-row md:items-center gap-12 w-full">
+                                <div className="w-full aspect-square md:h-64 md:w-64 shrink-0 rounded-2xl overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-black/20 z-10"></div>
+                                    <img src="assets/Marcel_Founder_Diaries.webp" alt="Marcel" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="w-full md:w-1/2 max-w-xl">
+                                    <h3 className="text-xs uppercase tracking-widest text-warmMuted mb-4">Marcel</h3>
+                                    <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-6">AI-Driven Design &<br/>Marketing Workflows</h2>
+                                    <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                                        Hi, I'm Marcel, co-founder of Alphabees. In this Founder Diary I document how I build AI-driven design, marketing and sales workflows. I experiment with different tool combinations to create automation systems that save time and allow us to run multiple brands under one roof.
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
+
+                            {/* Panel 3 */}
+                            <div className="w-full md:w-[80vw] h-screen shrink-0 flex items-center justify-center px-6 md:px-24">
+                                <div className="flex flex-col md:flex-row md:items-center gap-12 w-full">
+                                <div className="w-full aspect-square md:h-64 md:w-64 shrink-0 rounded-2xl overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-black/20 z-10"></div>
+                                    <img src="assets/Lasse_Founder_Diaries.webp" alt="Lasse" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="w-full md:w-1/2 max-w-xl">
+                                    <h3 className="text-xs uppercase tracking-widest text-warmMuted mb-4">Lasse</h3>
+                                    <h2 className="font-serif text-3xl md:text-5xl tracking-tight mb-6">AI-First Software,<br/>Operations & Finance</h2>
+                                    <p className="text-sm md:text-base text-white/70 leading-relaxed">
+                                        Hi, I'm Lasse, co-founder of Alphabees. In this Founder Diary I document how I build AI-first systems for software development, server operations, finance and taxes. I experiment with architectures, automations and internal systems that help us run our ventures with as little manual work as possible.
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const VentureLayerSection = () => {
+            const containerRef = useRef(null);
+            const [progress, setProgress] = useState(0);
+            const [isDesktop, setIsDesktop] = useState(true);
+
+            useEffect(() => {
+                const checkLayout = () => setIsDesktop(window.innerWidth >= 768);
+                checkLayout();
+                window.addEventListener('resize', checkLayout);
+                return () => window.removeEventListener('resize', checkLayout);
+            }, []);
+
+            useEffect(() => {
+                if (!isDesktop) return;
+                const handleScroll = () => {
+                    if (!containerRef.current) return;
+                    const { top, height } = containerRef.current.getBoundingClientRect();
+                    const wh = window.innerHeight;
+                    if (top <= 0 && -top <= height - wh) {
+                        setProgress(-top / (height - wh));
+                    } else if (top > 0) {
+                        setProgress(0);
+                    } else {
+                        setProgress(1);
+                    }
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                handleScroll();
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [isDesktop]);
+
+            const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+            const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+            const phase = (start, end) => easeOut(clamp((progress - start) / (end - start), 0, 1));
+
+            // Title fades in
+            const titleP   = isDesktop ? phase(0, 0.07) : 1;
+            // Layer cards appear in sequence
+            const toolP    = isDesktop ? phase(0.18, 0.46) : 1;
+            const agentP   = isDesktop ? phase(0.44, 0.68) : 1;
+            const productP = isDesktop ? phase(0.65, 0.88) : 1;
+
+            const layers = [
+                {
+                    num: '01', label: 'Tool Layer',
+                    desc: 'The raw ingredients our agents consume.',
+                    items: ['AI Models', 'External APIs', 'Data Feeds', 'Triggers & Webhooks'],
+                    p: toolP,
+                    borderColor: 'rgba(255,255,255,0.07)',
+                    accentColor: 'rgba(255,255,255,0.04)',
+                },
+                {
+                    num: '02', label: 'Agent Layer',
+                    desc: 'Autonomous agents that orchestrate the work.',
+                    items: ['Research Agent', 'Code Agent', 'Design Agent', 'Finance Agent'],
+                    p: agentP,
+                    borderColor: 'rgba(168,159,145,0.22)',
+                    accentColor: 'rgba(168,159,145,0.04)',
+                },
+                {
+                    num: '03', label: 'Product Layer',
+                    desc: 'What ships with two humans and many agents.',
+                    items: ['AI Ventures', 'Internal Tools', 'Automations', 'Founder Diaries'],
+                    p: productP,
+                    borderColor: 'rgba(168,159,145,0.45)',
+                    accentColor: 'rgba(168,159,145,0.07)',
+                },
+            ];
+
+            return (
+                <section ref={containerRef} className="md:h-[500vh] relative z-10">
+                    <div className="md:sticky md:top-0 md:h-screen w-full overflow-hidden">
+                        <div className="h-full flex flex-col items-center justify-center px-6 md:px-12 py-24 md:py-0">
+
+                            {/* Section heading */}
+                            <div
+                                className="text-center mb-8 max-w-2xl"
+                                style={{ opacity: titleP, transform: `translateY(${(1 - titleP) * 24}px)` }}
+                            >
+                                <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-white mb-2">The architecture.</h2>
+                                <p className="text-xs text-white/35 tracking-widest uppercase">Three layers. One operating system.</p>
+                            </div>
+
+                            {/* SVG connector line between founders and layers */}
+                            <div
+                                className="w-full max-w-3xl"
+                                style={{ opacity: clamp(toolP * 3, 0, 1) }}
+                            >
+                                <svg width="100%" height="24" viewBox="0 0 600 24" preserveAspectRatio="none" className="mb-0">
+                                    <line x1="50%" y1="0" x2="50%" y2="24" stroke="rgba(168,159,145,0.25)" strokeWidth="1" strokeDasharray="3 3"/>
+                                </svg>
+                            </div>
+
+                            {/* Layer cards */}
+                            <div className="w-full max-w-3xl flex flex-col gap-3">
+                                {layers.map((layer, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            opacity: layer.p,
+                                            transform: `translateY(${(1 - layer.p) * 44}px)`,
+                                            borderColor: layer.borderColor,
+                                            backgroundColor: layer.accentColor,
+                                        }}
+                                        className="backdrop-blur-md border rounded-2xl p-5 md:p-6"
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <span className="text-warmMuted text-xs tracking-widest uppercase font-mono shrink-0">{layer.num}</span>
+                                            <span className="font-serif text-xl md:text-2xl tracking-tight text-white">{layer.label}</span>
+                                            <div className="h-px flex-grow bg-white/10 ml-2"></div>
+                                        </div>
+                                        <p className="text-xs text-white/35 mb-3 leading-relaxed">{layer.desc}</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {layer.items.map((item, j) => (
+                                                <span key={j} className="text-xs text-white/50 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
+                                                    {item}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const WhySection = () => (
+            <section className="md:h-[200vh] px-6 relative z-10 bg-black">
+                <div className="md:sticky md:top-0 md:h-screen flex items-center justify-center">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <h2 className="font-serif text-4xl md:text-6xl tracking-tight mb-8">We make mistakes<br/>so you don't have to.</h2>
+                        <p className="text-base md:text-lg text-white/70 leading-relaxed">
+                            We got tired of the marketing hype. So we started testing everything ourselves. Every tool, every system, every mistake — documented as we go. So other founders skip the part where they waste time figuring it out alone.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const DiariesSection = () => {
+            const posts = [
+                {
+                    tag: "Architecture",
+                    title: "Building AI-driven landing page systems with Figma, Claude and website builders",
+                    excerpt: "How we reduced our landing page deployment time from weeks to hours using a rigid component system and AI generation."
+                },
+                {
+                    tag: "Operations",
+                    title: "Automating internal workflows across multiple brands",
+                    excerpt: "The exact Zapier and Make architectures we use to route customer data, support tickets, and sales alerts without human touch."
+                },
+                {
+                    tag: "Infrastructure",
+                    title: "Server and operations lessons from building AI-first ventures",
+                    excerpt: "Why we abandoned complex cloud setups for simple VPS hosting, and how we handle scaling when AI features go viral."
+                },
+                {
+                    tag: "Mistakes",
+                    title: "Mistakes in early AI tool stack decisions",
+                    excerpt: "We spent $2,000 on the wrong vector database setup. Here is why we switched, and what you should use instead."
+                }
+            ];
+
+            return (
+                <section id="diary" className="md:h-[200vh] relative z-10 bg-black/95">
+                    <div className="md:sticky md:top-0 md:h-screen flex items-center py-32 px-6">
+                        <div className="max-w-7xl mx-auto w-full">
+                            <div className="flex justify-between items-end mb-16 border-b border-white/10 pb-8">
+                                <h2 className="font-serif text-4xl md:text-5xl tracking-tight">Latest Diaries</h2>
+                                <a href="diaries.html" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
+                                    view archive <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+                                </a>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+                                {posts.map((post, i) => (
+                                    <article key={i} className="group cursor-pointer">
+                                        <div className="mb-4 flex items-center gap-4">
+                                            <span className="text-xs tracking-widest uppercase text-warmMuted">{post.tag}</span>
+                                            <div className="h-px bg-white/10 flex-grow group-hover:bg-white/30 transition-colors"></div>
+                                        </div>
+                                        <h3 className="font-serif text-2xl md:text-3xl tracking-tight mb-4 group-hover:text-[#F990E8] transition-colors leading-snug">
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-sm text-white/60 leading-relaxed">
+                                            {post.excerpt}
+                                        </p>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const SubscribeSection = () => {
+            const [expanded, setExpanded] = React.useState(false);
+
+            return (
+                <section className="py-40 px-6 relative z-10 bg-black flex items-center justify-center text-center">
+                    <div className="max-w-3xl w-full">
+                        <h2 className="font-serif text-5xl md:text-6xl tracking-tight mb-2" style={{color: '#0CE3EC'}}>Follow the journey.</h2>
+                        <h2 className="font-serif text-5xl md:text-6xl tracking-tight mb-8" style={{color: '#0CE3EC'}}>it's free!</h2>
+                        <p className="text-base mb-12" style={{color: '#0CE3EC'}}>
+                            We publish one founder diary per week. Carefully distilled — only what actually matters from what we built, tested and learned. No filler.
+                        </p>
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+                            {/* First Name — slides out first, 1100ms */}
+                            <div style={{
+                                width: expanded ? '196px' : '0px',
+                                opacity: expanded ? 1 : 0,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                transition: 'width 1100ms cubic-bezier(0.4, 0, 0.2, 1), opacity 450ms ease',
+                            }}>
+                                <div style={{ paddingRight: '12px' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="First Name..."
+                                        className="w-full px-5 py-4 rounded-full bg-white/5 border border-white/20 text-white text-sm font-mono placeholder:text-white/35 focus:outline-none focus:border-[#0CE3EC]/60 transition-colors duration-300"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* E-Mail — slides out second, 900ms with slight delay */}
+                            <div style={{
+                                width: expanded ? '232px' : '0px',
+                                opacity: expanded ? 1 : 0,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                transition: 'width 900ms cubic-bezier(0.4, 0, 0.2, 1) 180ms, opacity 450ms ease 180ms',
+                            }}>
+                                <div style={{ paddingRight: '12px' }}>
+                                    <input
+                                        type="email"
+                                        placeholder="E-Mail..."
+                                        className="w-full px-5 py-4 rounded-full bg-white/5 border border-white/20 text-white text-sm font-mono placeholder:text-white/35 focus:outline-none focus:border-[#0CE3EC]/60 transition-colors duration-300"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Button — shrinks to icon after expand */}
+                            <button
+                                onClick={() => setExpanded(true)}
+                                className="bg-white text-black rounded-full font-semibold text-sm hover:bg-[#0CE3EC] hover:scale-105 transition-all duration-300 shrink-0 overflow-hidden nav-roll-trigger"
+                                style={{
+                                    padding: expanded ? '16px 20px' : '16px 32px',
+                                    transition: 'padding 600ms cubic-bezier(0.4, 0, 0.2, 1), background-color 300ms, transform 300ms',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                <span style={{
+                                    display: 'inline-block',
+                                    transition: 'opacity 300ms ease, transform 300ms ease',
+                                    opacity: expanded ? 0 : 1,
+                                    transform: expanded ? 'scale(0.6)' : 'scale(1)',
+                                    position: expanded ? 'absolute' : 'relative',
+                                }}>
+                                    <span className="nav-roll">
+                                        <span className="nav-roll__inner">
+                                            <span className="nav-roll__front">Subscribe</span>
+                                            <span className="nav-roll__back">Subscribe</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span style={{
+                                    display: 'inline-block',
+                                    transition: 'opacity 300ms ease 500ms, transform 300ms ease 500ms',
+                                    opacity: expanded ? 1 : 0,
+                                    transform: expanded ? 'translateX(0)' : 'translateX(-8px)',
+                                    position: expanded ? 'relative' : 'absolute',
+                                }}>→</span>
+                            </button>
+
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const App = () => {
+            const [scrollY, setScrollY] = useState(0);
+            const [maxScroll, setMaxScroll] = useState(1);
+            const [frozenOpacity, setFrozenOpacity] = useState(null);
+            const scrollProgressRef = useRef(0);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrollY(window.scrollY);
+                    setMaxScroll(document.documentElement.scrollHeight - window.innerHeight);
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                handleScroll(); // init
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            useEffect(() => {
+            }, []);
+
+            const scrollProgress = maxScroll > 0 ? Math.min(1, scrollY / maxScroll) : 0;
+            scrollProgressRef.current = scrollProgress;
+
+            const rawOpacity = Math.min(0.95, 0.4 + (scrollProgress * 1.5));
+            const overlayOpacity = frozenOpacity !== null ? Math.min(rawOpacity, frozenOpacity) : rawOpacity;
+
+            const handleMarcelVisible = React.useCallback(() => {
+                setFrozenOpacity(Math.min(0.95, 0.4 + (scrollProgressRef.current * 1.5)));
+            }, []);
+
+            return (
+                <div className="relative min-h-screen">
+                    {/* Fixed Cinematic Background Layer */}
+                    <div className="fixed inset-0 z-0">
+                        <img
+                            src="https://images.unsplash.com/photo-1572338166945-81498144b248?q=80&w=2532&auto=format&fit=crop"
+                            alt=""
+                            className="w-full h-full object-cover filter saturate-100 contrast-110"
+                        />
+                        <div 
+                            className="absolute inset-0 bg-[#1a120b] transition-opacity duration-300 ease-out" 
+                            style={{ opacity: overlayOpacity }}
+                        />
+                        <div className="absolute inset-0 bg-noise"></div>
+                    </div>
+
+                    <Nav scrollProgress={scrollProgress} />
+                    
+                    <main>
+                        <Hero />
+                        <AboutHorizontalScroll onMarcelVisible={handleMarcelVisible} />
+                        <VentureLayerSection />
+                        <WhySection />
+                        <DiariesSection />
+                        <SubscribeSection />
+                    </main>
+
+                    <footer className="relative z-10 bg-black border-t border-white/5 py-4 px-6">
+                        <div className="max-w-7xl mx-auto flex justify-between items-center">
+                            <span className="text-xs text-white/45 tracking-wide">© Alphabees 2026</span>
+                            <div className="flex items-center gap-5">
+                                <a href="#" className="text-xs text-white/45 hover:text-white/70 transition-colors tracking-wide">Privacy Policy</a>
+                                <a href="imprint.html" className="text-xs text-white/45 hover:text-white/70 transition-colors tracking-wide">Imprint</a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+
+</body></html>
