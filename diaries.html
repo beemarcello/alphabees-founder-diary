@@ -769,6 +769,112 @@
             }
         }
 
+        /* ── Hero Scene ── */
+        #hero-wrapper {
+            height: 285vh;
+        }
+        #hero-scene {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        /* Plant layers — fixed to viewport */
+        .plant-layer {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 38%;
+            will-change: transform;
+            z-index: 100;
+            pointer-events: none;
+        }
+        .plant-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            mix-blend-mode: screen;
+            filter: hue-rotate(58deg) saturate(0.50) brightness(0.68) contrast(1.10);
+        }
+
+        #plant-left-back  { display: none; }
+        #plant-right-back { display: none; }
+        #plant-left-front  { left: 0;  transform: translateX(-15%); }
+        #plant-right-front { right: 0; transform: translateX(15%) scaleX(-1); }
+
+        #hero-intro-text {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            padding: 0 48px;
+            max-width: 700px;
+            pointer-events: none;
+            opacity: 0;
+        }
+        #hero-intro-text .eyebrow {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.40);
+            margin-bottom: 18px;
+        }
+        #hero-intro-text h1 {
+            font-family: 'Bigola Display', serif;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            letter-spacing: 0em;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.08;
+            margin-bottom: 20px;
+        }
+        #hero-intro-text p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.9;
+        }
+
+        #scroll-hint {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.5;
+        }
+        #scroll-hint span {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: rgba(255,255,255,0.5);
+        }
+        #scroll-hint .hint-line {
+            width: 1px;
+            height: 40px;
+            background: rgba(255,255,255,0.3);
+            animation: scrollHintPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollHintPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50%       { opacity: 1;   transform: scaleY(0.5); transform-origin: top; }
+        }
+
+        @media (max-width: 900px) {
+            #hero-intro-text { padding: 0 24px; }
+            #plant-left-front  { width: 55%; }
+            #plant-right-front { width: 55%; }
+        }
+
     </style>
 </head>
 <body>
@@ -807,6 +913,28 @@
         </nav>
 
         <!-- Hero Scene -->
+        <div id="hero-wrapper">
+        <div id="hero-scene">
+            <div class="plant-layer" id="plant-left-back"></div>
+            <div class="plant-layer" id="plant-right-back"></div>
+            <div class="plant-layer" id="plant-left-front">
+                <img src="assets/palm_scroll_animation/plant_left_front.webp" alt="">
+            </div>
+            <div class="plant-layer" id="plant-right-front">
+                <img src="assets/palm_scroll_animation/plant_right_front.webp" alt="">
+            </div>
+            <div id="hero-intro-text">
+                <p class="eyebrow">Founder Diaries</p>
+                <h1>No hidden costs.<br>It's free!</h1>
+                <p>We build software. No courses. No paywalls. This diary is how we share what we learn along the way.</p>
+            </div>
+            <div id="scroll-hint">
+                <div class="hint-line"></div>
+                <span>scroll</span>
+            </div>
+        </div>
+        </div><!-- /hero-wrapper -->
+
         <!-- Filter bar -->
         <div class="filter-bar" id="filter-bar">
             <button class="filter-btn" onclick="filterPosts('featured', this)">Featured</button>
@@ -891,6 +1019,44 @@
         <div id="site-footer"></div>
 
     </div>
+
+    <script>
+        // ── Plant scroll animation ─────────────────────────────────────────
+        (function() {
+            const plantLF  = document.getElementById('plant-left-front');
+            const plantRF  = document.getElementById('plant-right-front');
+            const heroText = document.getElementById('hero-intro-text');
+            const hint     = document.getElementById('scroll-hint');
+
+            function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+            function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+            const START = -15;
+            const REST  = -72;
+
+            function onScroll() {
+                const s  = window.scrollY;
+                const vh = window.innerHeight;
+                // Phase 1 (0 → vh): palms slide out + text fades in
+                const p1 = easeOut(clamp(s / vh, 0, 1));
+                // Phase 2 (1.5vh → 1.85vh): text fades out
+                const p2 = easeOut(clamp((s - vh * 1.5) / (vh * 0.35), 0, 1));
+
+                const xL = START + p1 * (REST - START);
+                plantLF.style.transform = `translateX(${xL}%)`;
+                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
+
+                const scale = 0.78 + p1 * 0.22;
+                heroText.style.opacity   = p1 * (1 - p2);
+                heroText.style.transform = `scale(${scale})`;
+
+                hint.style.opacity = clamp(0.5 - s / 80, 0, 0.5);
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        })();
+    </script>
 
     <script>
         // ── Load diary cards from index.json ───────────────────────────────
