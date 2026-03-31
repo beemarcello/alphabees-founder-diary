@@ -1,3 +1,75 @@
+<style>
+    /* ── Mobile hamburger button ── */
+    #mobile-menu-btn {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        position: relative;
+        z-index: 101;
+    }
+    #mobile-menu-btn span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: rgba(255,255,255,0.88);
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #mobile-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #mobile-menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    #mobile-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Mobile full-screen overlay ── */
+    #mobile-nav-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.97);
+        z-index: 49;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 36px;
+    }
+    #mobile-nav-overlay.open { display: flex; }
+    #mobile-nav-overlay a {
+        font-family: 'Space Mono', monospace;
+        font-size: 20px;
+        color: rgba(255,255,255,0.72);
+        text-decoration: none;
+        letter-spacing: 0.08em;
+        transition: color 0.2s;
+    }
+    #mobile-nav-overlay a:hover,
+    #mobile-nav-overlay a.active { color: #fff; }
+    #mobile-nav-overlay .mob-sub-btn {
+        margin-top: 16px;
+        font-family: 'Space Mono', monospace;
+        font-size: 13px;
+        color: rgba(255,255,255,0.88);
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.20);
+        border-radius: 100px;
+        padding: 14px 40px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    #mobile-nav-overlay .mob-sub-btn:hover { background: rgba(255,255,255,0.18); }
+
+    @media (max-width: 768px) {
+        #mobile-menu-btn { display: flex !important; }
+        #site-header .nav-links,
+        #site-header .nav-subscribe-wrap { display: none !important; }
+        #site-header nav { padding: 16px 20px !important; }
+    }
+</style>
+
 <nav>
     <a href="index.html" class="logo">
         <img src="assets/Alphabees_founder_diaries_Logo_white.svg" alt="Alphabees Founder Diaries" />
@@ -23,4 +95,34 @@
             <span class="sub-arrow">→</span>
         </button>
     </div>
+    <button id="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+    </button>
 </nav>
+
+<div id="mobile-nav-overlay">
+    <a href="index.html#about">about</a>
+    <a href="diaries.html">diary</a>
+    <a href="toolkit.html">toolkit</a>
+    <a href="#newsletter" class="mob-sub-btn">subscribe</a>
+</div>
+
+<script>
+    (function() {
+        var btn = document.getElementById('mobile-menu-btn');
+        var overlay = document.getElementById('mobile-nav-overlay');
+        if (!btn || !overlay) return;
+        btn.addEventListener('click', function() {
+            var isOpen = btn.classList.toggle('open');
+            overlay.classList.toggle('open', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+        overlay.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                btn.classList.remove('open');
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+    })();
+</script>

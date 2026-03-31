@@ -184,6 +184,21 @@
         }
         #site-footer footer a:hover { color: rgba(255,255,255,0.80); }
         #site-footer footer .links { display: flex; gap: 24px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden; }
+            #site-header nav { padding: 16px 20px !important; }
+            main { margin: 48px auto 64px; padding: 0 24px; }
+            h1 { margin-bottom: 36px; }
+            .block { margin-bottom: 32px; }
+            #site-footer footer { padding: 16px 20px; flex-direction: column; gap: 12px; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            main { padding: 0 16px; }
+            h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+        }
     </style>
 </head>
 <body>

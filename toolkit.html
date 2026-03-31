@@ -377,6 +377,22 @@
             #site-header nav { padding: 20px 24px; }
             #site-footer footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
         }
+
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden; }
+            #site-header nav { padding: 16px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding: 48px 16px 40px; }
+            .hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); }
+            .products, .more-tools, .newsletter { padding: 0 16px; }
+            .product-card { padding: 28px 20px; }
+            .hero-divider { padding: 0 16px; }
+            .product-ctas { flex-direction: column; }
+            .btn-primary, .btn-secondary { text-align: center; }
+            #site-footer footer { padding: 16px; }
+        }
     </style>
 </head>
 <body>

@@ -913,8 +913,94 @@
             #hero-intro-text { padding: 0 24px; }
             #plant-left-back  { width: 65%; }
             #plant-right-back { width: 65%; }
-            #plant-left-front  { width: 72%; }
-            #plant-right-front { width: 72%; }
+            #plant-left-front  { width: 55%; }
+            #plant-right-front { width: 55%; }
+        }
+
+        /* ── Mobile: plant object-position ── */
+        #plant-left-front  img { object-position: right center; }
+        #plant-right-front img { object-position: left center; }
+
+        /* ── Mobile hamburger button ── */
+        #mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            position: relative;
+            z-index: 101;
+        }
+        #mobile-menu-btn span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: rgba(255,255,255,0.88);
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        #mobile-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        #mobile-menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        #mobile-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ── Mobile full-screen overlay ── */
+        #mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.97);
+            z-index: 49;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+        }
+        #mobile-nav-overlay.open { display: flex; }
+        #mobile-nav-overlay a {
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            color: rgba(255,255,255,0.72);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            transition: color 0.2s;
+        }
+        #mobile-nav-overlay a.active { color: #F990E8; }
+        #mobile-nav-overlay a:hover { color: #fff; }
+        #mobile-nav-overlay .mob-sub-btn {
+            margin-top: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: rgba(255,255,255,0.88);
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 100px;
+            padding: 14px 40px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        #mobile-nav-overlay .mob-sub-btn:hover { background: rgba(255,255,255,0.18); }
+
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden; }
+            nav { padding: 16px 20px; }
+            .nav-links, .nav-subscribe-wrap { display: none !important; }
+            #mobile-menu-btn { display: flex !important; }
+            .filter-bar { padding: 10px 16px; top: var(--nav-height, 68px); gap: 6px; }
+            .filter-btn { font-size: 11px; padding: 7px 12px; }
+            .blog-grid { padding: 0 16px; }
+            .newsletter { padding: 0 16px; }
+            footer { padding: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            nav a.logo img { height: 28px; }
+            .filter-bar { padding: 8px 12px; }
+            .search-input { width: 100px; }
+            .card-title { font-size: 15px; }
         }
     </style>
 </head>
@@ -951,7 +1037,17 @@
                     <span class="sub-arrow">→</span>
                 </button>
             </div>
+            <button id="mobile-menu-btn" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
         </nav>
+
+        <div id="mobile-nav-overlay">
+            <a href="index.html#about">about</a>
+            <a href="diaries.html" class="active">diary</a>
+            <a href="toolkit.html">toolkit</a>
+            <a href="#newsletter" class="mob-sub-btn">subscribe</a>
+        </div>
 
         <!-- Hero Scene -->
         <div id="hero-wrapper">
@@ -1270,7 +1366,7 @@
             function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
             const START = -15;
-            const REST  = -72;
+            const REST  = -62;
 
             function onScroll() {
                 const s  = window.scrollY;
@@ -1284,7 +1380,7 @@
                 // Plants slide out in phase 1, hold in phase 2
                 const xL = START + p1 * (REST - START);
                 plantLF.style.transform = `translateX(${xL}%)`;
-                plantRF.style.transform = `translateX(${-xL}%) scaleX(-1)`;
+                plantRF.style.transform = `translateX(${-xL}%)`;
 
                 heroBg.style.opacity = (1 - p1) * 0.75;
 
@@ -1477,6 +1573,27 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        // ── Mobile hamburger ──────────────────────────────────────────────
+        (function() {
+            var btn = document.getElementById('mobile-menu-btn');
+            var overlay = document.getElementById('mobile-nav-overlay');
+            if (!btn || !overlay) return;
+            btn.addEventListener('click', function() {
+                var isOpen = btn.classList.toggle('open');
+                overlay.classList.toggle('open', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+            overlay.querySelectorAll('a').forEach(function(a) {
+                a.addEventListener('click', function() {
+                    btn.classList.remove('open');
+                    overlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+        })();
     </script>
 
 </body>
